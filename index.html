@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blume — Cinematic Worlds where Art meets Code</title>
+  <meta name="description" content="Blume is a studio crafting bold visual worlds through cinematic 3D & motion. From music & culture to branding and digital, we blend art and code to build immersive identities." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blume: {
+              bg: '#1C1C1C',
+              tint: '#2A2A2A',
+              text: '#F3F3F3',
+              sub: '#B3B3B3',
+              accent: '#FF6A00'
+            }
+          },
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"]
+          },
+          boxShadow: {
+            glow: '0 0 0 1px rgba(255,106,0,0.25), 0 10px 30px rgba(0,0,0,0.5)'
+          },
+          backgroundImage: {
+            'grid-faint': 'radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)',
+            'hero-gradient': 'linear-gradient(180deg, rgba(255,106,0,0.08), rgba(28,28,28,0) 30%, rgba(28,28,28,0) 70%, rgba(255,106,0,0.06))'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html{scroll-behavior:smooth}
+    .thumb video{transition:opacity .4s ease}
+    .thumb:hover video{opacity:1}
+    body.grain::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");background-size:160px 160px}
+    body.grain::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%)}
+    header,section,footer{position:relative;z-index:1}
+    /* film grain overlay */
+    body.grain::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");background-size:160px 160px}
+    body.grain::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%)}
+    header,section,footer{position:relative;z-index:1}
+    /* ====== Two-row Puzzle River ====== */
+    .puzzle{position:relative}
+    .puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 4%, rgba(10,10,10,0) 10%, rgba(10,10,10,0) 90%, rgba(10,10,10,.35) 96%, rgba(10,10,10,0) 100%)}
+    .puzzle-track{display:grid; grid-auto-flow:column dense; align-items:stretch; gap:var(--gap, .75rem);
+      grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);}
+    @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
+    @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
+    .tile{position:relative; overflow:hidden; border-radius:0.75rem; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05)}
+    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+    .tile video{opacity:0; transition:opacity .35s ease}
+    .tile:hover video{opacity:1}
+    .run{animation:puzzle-scroll var(--duration, 70s) linear infinite}
+    .tile img{transition:transform .3s ease, filter .3s ease}
+    .tile:hover img{transform:scale(1.08); filter:brightness(1.2)}
+    .reverse{animation-direction:reverse}
+    @keyframes puzzle-scroll{to{transform:translateX(calc(-1 * var(--loop, 1000px)))}}
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black" style="background:linear-gradient(to bottom,#1C1C1C 0%,#0A0A0A 100%);">
+  <!-- NAV -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#top" class="flex items-center gap-3 group">
+          <img src="https://blume-visuals.com/assets/images/logo.png" alt="Blume Logo" class="h-12 w-auto">
+        </a>
+        <nav class="hidden md:flex items-center gap-8 text-sm text-blume-sub">
+          <a href="#work" class="hover:text-white">Work</a>
+          <a href="#about" class="hover:text-white">About</a>
+          <a href="#process" class="hover:text-white">How We Work</a>
+          <a href="#services" class="hover:text-white">Services</a>
+          <a href="#contact" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/10 shadow-glow">Start a Project</a>
+        </nav>
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10 text-blume-sub hover:text-white">☰</button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden border-t border-white/5">
+      <div class="px-4 py-4 space-y-2 text-blume-sub">
+        <a href="#work" class="block hover:text-white">Work</a>
+        <a href="#about" class="block hover:text-white">About</a>
+        <a href="#process" class="block hover:text-white">How We Work</a>
+        <a href="#services" class="block hover:text-white">Services</a>
+        <a href="#contact" class="mt-2 inline-block px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/10">Start a Project</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO FULL-WIDTH REEL -->
+  <section id="top" class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-grid-faint bg-[size:22px_22px] opacity-20 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-hero-gradient"></div>
+
+    <div class="w-full relative border-b border-white/10 overflow-hidden" style="aspect-ratio:21/9; min-height:600px;">
+  <video autoplay muted loop playsinline class="w-full h-full object-cover">
+    <source src="./intro.mp4" type="video/mp4" />
+  </video>
+
+  <!-- Overlay box in top-right -->
+  <div class="absolute top-6 md:top-96 max-w-xl p-6 
+              rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 
+              border border-white/10 text-left">
+    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
+      Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.
+    </h1>
+    <p class="mt-4 text-blume-sub text-base md:text-lg">
+      Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.
+    </p>
+    <div class="mt-6 flex flex-wrap justify-start gap-3">
+      <a href="#work" class="px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">See Our Work</a>
+      <a href="#contact" class="px-4 py-2 rounded-xl bg-white/5 text-white border border-white/10 hover:bg-white/10">Start a Project</a>
+    </div>
+  </div>
+</div>
+
+  </section>
+
+  <!-- GALLERY / SELECTED WORK (Two-row Puzzle River) -->
+  <section id="work" class="py-12 md:py-16">
+    <div class="w-full px-2 sm:px-4 lg:px-6">
+      <div class="flex items-end justify-between gap-6 max-w-full px-2 sm:px-4">
+        <div>
+          <h2 class="text-3xl md:text-5xl font-bold">Selected Work</h2>
+          <p class="mt-3 text-blume-sub max-w-4xl">Two-row puzzle layout that scrolls horizontally. Tiles snap together—no awkward gaps. Hover to pause.</p>
+        </div>
+        <a href="#contact" class="hidden md:inline-flex px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Work with Us</a>
+      </div>
+
+      <!-- Puzzle River -->
+      <div class="mt-8 puzzle group relative overflow-hidden">
+        <div id="puzzleTrack" class="puzzle-track will-change-transform"></div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <a href="#contact" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES / SERVICES -->
+  <section id="services" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40/"> 
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-3xl md:text-5xl font-bold">What We Do</h2>
+          <p class="mt-3 text-blume-sub max-w-2xl">Motion-first studio blending 3D, design and code. Branding and interactive support the cinematic core.</p>
+        </div>
+      </div>
+      <div class="mt-10 grid md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="text-xl font-semibold">Motion & 3D</h3>
+          <p class="text-blume-sub mt-2">Promos, visualizers, show opens, music content, CG worlds, look-dev & simulations.</p>
+          <ul class="mt-4 text-sm text-blume-sub space-y-1 list-disc list-inside">
+            <li>Cinematic direction & editing</li>
+            <li>Simulation / particles / shaders</li>
+            <li>Styleframes & look dev</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="text-xl font-semibold">Branding & Identity</h3>
+          <p class="text-blume-sub mt-2">Logo systems, type, art direction and brand worlds that extend into motion.</p>
+          <ul class="mt-4 text-sm text-blume-sub space-y-1 list-disc list-inside">
+            <li>Logo & visual systems</li>
+            <li>Key art & campaign toolkits</li>
+            <li>Motion language & guidelines</li>
+          </ul>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="text-xl font-semibold">Digital & Interactive</h3>
+          <p class="text-blume-sub mt-2">Sites and microsites that turn visuals into living experiences.</p>
+          <ul class="mt-4 text-sm text-blume-sub space-y-1 list-disc list-inside">
+            <li>Web design & development</li>
+            <li>Realtime/interactive experiments</li>
+            <li>Launch pages & reels</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPROACH / PROCESS -->
+  <section id="process" class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-5xl font-bold">How We Work</h2>
+      <div class="mt-10 grid md:grid-cols-3 gap-6 text-blume-sub">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm uppercase tracking-widest text-blume-accent">01</div>
+          <h3 class="text-xl font-semibold text-white mt-2">Kickoff & Story</h3>
+          <p class="mt-2">Goals, audience and the visual north star. We define impact, tone, and references.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm uppercase tracking-widest text-blume-accent">02</div>
+          <h3 class="text-xl font-semibold text-white mt-2">R&amp;D & Look Dev</h3>
+          <p class="mt-2">Styleframes, shaders, simulations and tests to find the most cinematic language.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm uppercase tracking-widest text-blume-accent">03</div>
+          <h3 class="text-xl font-semibold text-white mt-2">Build & Deliver</h3>
+          <p class="mt-2">Production, edit & sound. We package assets for launch across platforms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div>
+          <h2 class="text-3xl md:text-5xl font-bold">About Blume</h2>
+          <p class="mt-4 text-blume-sub max-w-2xl">Blume is a studio of visual artists and programmers. We mix craft and code to create work that feels alive—across music, culture, esports and digital-first brands.</p>
+          <div class="mt-6 grid grid-cols-3 gap-4 text-sm text-blume-sub">
+            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">3+</div><div>Core disciplines</div></div>
+            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">20+</div><div>Projects shipped</div></div>
+            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">∞</div><div>Ideas brewing</div></div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT CTA + FORM -->
+  <section id="contact" class="py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold">Let’s build something wild</h2>
+      <p class="mt-4 text-blume-sub">Whether it’s a music video, a brand world, or an experiment — we’re here to make visuals that move people.</p>
+      <div class="mt-8">
+        <form class="grid sm:grid-cols-2 gap-3 text-left">
+          <input type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
+          <textarea placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2"></textarea>
+          <button type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
+        </form>
+        <div class="mt-6 text-sm text-blume-sub">Prefer email? <a class="underline hover:text-white" href="mailto:hello@blume-visuals.com">hello@blume-visuals.com</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-white/5 text-sm text-blume-sub">
+    <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <a href="#top" class="inline-flex items-center">
+          <img src="https://blume-visuals.com/assets/images/logo.png" alt="Blume Logo" class="h-12 w-auto">
+        </a>
+        <span>© <span id="year"></span> Blume Studio</span>
+      </div>
+      <div class="flex items-center gap-5">
+        <a class="hover:text-white" href="#">Instagram</a>
+        <a class="hover:text-white" href="#">Behance</a>
+        <a class="hover:text-white" href="#">YouTube</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inline manifest (replace with your own artwork URLs) -->
+  <script id="artworks-data" type="application/json">
+{
+  "images": [
+    "./img1.jpg",
+    "./img2.jpg",
+    "./img3.jpg",
+    "./img4.jpg",
+    "./img5.jpg",
+    "./img6.jpg",
+    "./img7.jpg",
+    "./img8.jpg",
+    "./img9.jpg",
+    "./img10.jpg",
+    "./img11.jpg",
+    "./img13.jpg",
+    "./img14.jpg"
+  ]
+}
+</script>
+
+  <script>
+  // --- Nav ---
+  const btn = document.getElementById('menuBtn');
+  const menu = document.getElementById('mobileMenu');
+  btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // --- Two-row Puzzle River Loader (gap-free packer) ---
+  (async function loadBlumePuzzle(){
+    const track = document.getElementById('puzzleTrack');
+    if(!track) return;
+
+    // ----- collect sources (inline -> /artworks.json -> probe img1..img120.jpg) -----
+    function fromInline(){
+      const el = document.getElementById('artworks-data'); if(!el) return [];
+      try { const d = JSON.parse(el.textContent||'{}'); return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
+    }
+    async function fromFile(){
+      if(location.protocol==='file:') return [];
+      try { const r=await fetch('/artworks.json',{cache:'no-cache'}); if(!r.ok) return []; const d=await r.json();
+        return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
+    }
+    async function probeSeq(){
+      const seq = Array.from({length:120},(_,i)=>`./img${i+1}.jpg`);
+      const ok=[]; await Promise.all(seq.map(src=>new Promise(res=>{const im=new Image(); im.onload=()=>{ok.push(src);res()}; im.onerror=()=>res(); im.src=src;})));
+      return ok;
+    }
+
+    let sources = fromInline();
+    if(!sources.length) sources = await fromFile();
+    if(!sources.length) sources = await probeSeq();
+    if(!sources.length){ track.innerHTML = '<div class="text-center text-blume-sub py-6">No artworks found.</div>'; return; }
+
+    // ----- layout recipe (w,h). We’ll pack these without gaps. -----
+    const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
+
+    // Helper: make tile
+    function tile(src,i,[w,h]){
+      const a = document.createElement('a');
+      a.href=src; a.target="_blank"; a.rel="noopener";
+      a.className='tile group';
+      a.style.gridColumn = `span ${w}`;
+      a.style.gridRow    = `span ${Math.min(h,2)}`;
+      a.innerHTML = `
+        <img loading="lazy" src="${src}" alt="Artwork ${i+1}">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
+      return a;
+    }
+
+    // ----- gap-free packer for 2 rows -----
+    // Track column occupancy: for each column, top/bottom booleans.
+    const cols = []; // array of {top:boolean, bottom:boolean}
+    function ensureCol(idx){ while(cols.length<=idx) cols.push({top:false,bottom:false}); }
+
+    function canPlace(col,w,h){
+      for(let c=col;c<col+w;c++){
+        ensureCol(c);
+        if(h===2){ if(cols[c].top || cols[c].bottom) return false; }
+        else { if(cols[c].top) return false; }
+      }
+      return true;
+    }
+
+    function occupy(col,w,h,placeBottom=false){
+      for(let c=col;c<col+w;c++){
+        if(h===2){ cols[c].top=true; cols[c].bottom=true; }
+        else {
+          if(placeBottom) cols[c].bottom=true; else cols[c].top=true;
+        }
+      }
+    }
+
+    function nextHoleCol(){
+      for(let i=0;i<cols.length;i++){
+        if(cols[i].top && !cols[i].bottom) return i;
+      }
+      return -1;
+    }
+
+    const seq = [];
+    let si = 0; // source index
+    let col = 0;
+
+    function pushArt(w,h,placeBottom=false){
+      const src = sources[si++ % sources.length];
+      seq.push({src, span:[w,h], col, placeBottom});
+    }
+
+    const targetCount = Math.max(sources.length, 12);
+    let ri = 0;
+    while(seq.length < targetCount){
+      // fill dangling bottom holes first
+      let hole = nextHoleCol();
+      if(hole !== -1){
+        col = hole;
+        if(canPlace(col,1,1)){ occupy(col,1,1,true); pushArt(1,1,true); continue; }
+      }
+
+      const [w,h] = recipe[ri++ % recipe.length];
+      while(!canPlace(col,w,h)){
+        hole = nextHoleCol();
+        if(hole !== -1){
+          col = hole; occupy(col,1,1,true); pushArt(1,1,true);
+        }else{
+          ensureCol(col);
+          if(cols[col].top && !cols[col].bottom){ occupy(col,1,1,true); pushArt(1,1,true); }
+          else col += 1;
+        }
+      }
+      occupy(col,w,h,false); pushArt(w,h,false);
+      col += w;
+    }
+
+    // ----- render: duplicate once for seamless loop -----
+    track.innerHTML = '';
+    const set1 = seq.map((t,i)=> tile(t.src,i,t.span));
+    const set2 = seq.map((t,i)=> tile(t.src,i+set1.length,t.span));
+    set1.concat(set2).forEach(el=> track.appendChild(el));
+
+    requestAnimationFrame(()=>{
+      const gap = parseFloat(getComputedStyle(track).gap||'0');
+      const width = set1.reduce((w,el)=> w + el.getBoundingClientRect().width + gap, 0);
+      track.style.setProperty('--loop', `${width}px`);
+      const speed = Math.max(35, Math.min(120, Math.round(width/75)));
+      track.style.setProperty('--duration', `${speed}s`);
+      track.classList.add('run');
+    });
+  })();
+</script>
+</body>
+</html>
