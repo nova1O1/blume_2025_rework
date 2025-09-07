@@ -223,7 +223,14 @@
           <input name="email" type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
           <input name="company" type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
           <textarea name="message" placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2" required></textarea>
-          <input type="text" name="honeypot" tabindex="-1" autocomplete="off" class="hidden" />
+          <label class="sr-only" aria-hidden="true">Leave this field empty</label>
+          <input
+            type="text"
+            name="honeypot"
+            autocomplete="off"
+            tabindex="-1"
+            style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;"
+          />
           <button id="contactSubmit" type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
           <p id="contactMsg" class="sm:col-span-2 text-sm mt-1"></p>
         </form>
