@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     ].filter(Boolean).join("\n");
 
     // Use Resend onboarding sender unless your domain is verified.
-    const fromAddress = process.env.FROM_EMAIL || "Blume <onboarding@resend.dev>";
+    const fromAddress = process.env.FROM_EMAIL || "Blume <hello@blume-visuals.com>";
 
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
