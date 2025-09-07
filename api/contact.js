@@ -1,6 +1,6 @@
 // /api/contact.js
 export default async function handler(req, res) {
-  // CORS (keeps it flexible if you ever post from other origins)
+  // CORS (optional when posting from same origin)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -11,15 +11,25 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, company, message, honeypot } = req.body || {};
+    // Robust body parsing (works even if req.body is undefined)
+    let payload = {};
+    if (req.body && typeof req.body === "object") {
+      payload = req.body;
+    } else {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const raw = Buffer.concat(chunks).toString("utf8");
+      payload = raw ? JSON.parse(raw) : {};
+    }
 
-    // Simple validation
-    if (honeypot) return res.status(200).json({ ok: true }); // bot trap
+    const { name, email, company, message, honeypot } = payload;
+
+    // Bot + validation
+    if (honeypot) return res.status(200).json({ ok: true });
     if (!name || !email || !message) {
       return res.status(400).json({ ok: false, error: "Missing required fields." });
     }
 
-    // Compose email payload
     const toEmail = process.env.TO_EMAIL || "hello@blume-visuals.com";
     const subject = `New Blume Inquiry — ${name}${company ? ` @ ${company}` : ""}`;
     const text = [
@@ -31,7 +41,9 @@ export default async function handler(req, res) {
       message
     ].filter(Boolean).join("\n");
 
-    // Send via Resend API (no SDK needed)
+    // Use Resend onboarding sender unless your domain is verified.
+    const fromAddress = process.env.FROM_EMAIL || "Blume <onboarding@resend.dev>";
+
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -39,21 +51,25 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: "Blume <noreply@blume-visuals.com>",
+        from: fromAddress,                // switch to "Blume <hello@blume-visuals.com>" after DNS verify
         to: [toEmail],
         subject,
         text,
-        reply_to: email
+        // optional nicer formatting:
+        // html: `<pre style="font:14px/1.5 ui-sans-serif,system-ui">${text.replace(/</g,"&lt;")}</pre>`,
+        reply_to: email                   // so hitting “Reply” goes to the sender
       })
     });
 
     if (!r.ok) {
       const err = await r.text();
-      return res.status(500).json({ ok: false, error: `Email send failed: ${err}` });
+      console.error("Resend error:", err); // visible in Vercel function logs
+      return res.status(500).json({ ok: false, error: "Email send failed." });
     }
 
     return res.status(200).json({ ok: true });
   } catch (e) {
+    console.error("Handler error:", e);
     return res.status(500).json({ ok: false, error: e?.message || "Unknown error" });
   }
 }
