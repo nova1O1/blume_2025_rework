@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blume — Cinematic Worlds where Art meets Code</title>
   <meta name="description" content="Blume is a studio crafting bold visual worlds through cinematic 3D & motion. From music & culture to branding and digital, we blend art and code to build immersive identities." />
+
+  <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -33,44 +35,48 @@
       }
     }
   </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     html{scroll-behavior:smooth}
-    .thumb video{transition:opacity .4s ease}
-    .thumb:hover video{opacity:1}
     body.grain::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");background-size:160px 160px}
     body.grain::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%)}
     header,section,footer{position:relative;z-index:1}
-    /* film grain overlay */
-    body.grain::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");background-size:160px 160px}
-    body.grain::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%)}
-    header,section,footer{position:relative;z-index:1}
-    /* ====== Two-row Puzzle River ====== */
+
+    /* ====== Puzzle River ====== */
     .puzzle{position:relative}
     .puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 4%, rgba(10,10,10,0) 10%, rgba(10,10,10,0) 90%, rgba(10,10,10,.35) 96%, rgba(10,10,10,0) 100%)}
     .puzzle-track{display:grid; grid-auto-flow:column dense; align-items:stretch; gap:var(--gap, .75rem);
       grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);}
     @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
+    .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
+
     .tile{position:relative; overflow:hidden; border-radius:0.75rem; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05)}
     .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
-    .tile video{opacity:0; transition:opacity .35s ease}
-    .tile:hover video{opacity:1}
-    .run{animation:puzzle-scroll var(--duration, 70s) linear infinite}
+    .tile video{opacity:1; transition:opacity .35s ease}
+    .tile:hover img{transform:scale(1.06); filter:brightness(1.15)}
     .tile img{transition:transform .3s ease, filter .3s ease}
-    .tile:hover img{transform:scale(1.08); filter:brightness(1.2)}
+
+    .run{animation:puzzle-scroll var(--duration, 70s) linear infinite}
     .reverse{animation-direction:reverse}
     @keyframes puzzle-scroll{to{transform:translateX(calc(-1 * var(--loop, 1000px)))}}
+
+    /* Detail view (single-template page feel) */
+    .detail-enter{animation:fadeIn .3s ease both}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
   </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black" style="background:linear-gradient(to bottom,#1C1C1C 0%,#0A0A0A 100%);">
   <!-- NAV -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <a href="#top" class="flex items-center gap-3 group">
+        <a href="/" class="flex items-center gap-3 group">
           <img src="https://blume-visuals.com/assets/images/logo.png" alt="Blume Logo" class="h-12 w-auto">
         </a>
         <nav class="hidden md:flex items-center gap-8 text-sm text-blume-sub">
@@ -78,9 +84,9 @@
           <a href="#about" class="hover:text-white">About</a>
           <a href="#process" class="hover:text-white">How We Work</a>
           <a href="#services" class="hover:text-white">Services</a>
-          <a href="#contact" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/10 shadow-glow">Start a Project</a>
+          <a href="#contact" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/20  text-white border border-white/10 shadow-glow">Start a Project</a>
         </nav>
-        <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10 text-blume-sub hover:text-white">☰</button>
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10 text-blume-sub hover:text-white" aria-label="Open Menu">☰</button>
       </div>
     </div>
     <div id="mobileMenu" class="md:hidden hidden border-t border-white/5">
@@ -100,36 +106,32 @@
     <div class="absolute inset-0 bg-hero-gradient"></div>
 
     <div class="w-full relative border-b border-white/10 overflow-hidden" style="aspect-ratio:21/9; min-height:600px;">
-  <video autoplay muted loop playsinline class="w-full h-full object-cover">
-    <source src="./intro.mp4" type="video/mp4" />
-  </video>
+      <video autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="./intro.mp4" type="video/mp4" />
+      </video>
 
-  <!-- Overlay box in top-right -->
-  <div class="absolute top-6 md:top-96 max-w-xl p-6 
-              rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 
-              border border-white/10 text-left">
-    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
-      Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.
-    </h1>
-    <p class="mt-4 text-blume-sub text-base md:text-lg">
-      Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.
-    </p>
-    <div class="mt-6 flex flex-wrap justify-start gap-3">
-      <a href="#work" class="px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">See Our Work</a>
-      <a href="#contact" class="px-4 py-2 rounded-xl bg-white/5 text-white border border-white/10 hover:bg-white/10">Start a Project</a>
+      <!-- Overlay box BOTTOM-LEFT (per preference) -->
+      <div class="absolute left-6 bottom-6 md:left-10 md:bottom-10 max-w-2xl p-6 md:p-7 rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border border-white/10 text-left">
+        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
+          Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.
+        </h1>
+        <p class="mt-4 text-blume-sub text-base md:text-lg">
+          Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.
+        </p>
+        <div class="mt-6 flex flex-wrap justify-start gap-3">
+          <a href="#work" class="px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">See Our Work</a>
+          <a href="#contact" class="px-4 py-2 rounded-xl bg-white/5 text-white border border-white/10 hover:bg-white/10">Start a Project</a>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
   </section>
 
-  <!-- GALLERY / SELECTED WORK (Two-row Puzzle River) -->
+  <!-- GALLERY / SELECTED WORK (Two-row Puzzle River + extra third row) -->
   <section id="work" class="py-12 md:py-16">
     <div class="w-full px-2 sm:px-4 lg:px-6">
       <div class="flex items-end justify-between gap-6 max-w-full px-2 sm:px-4">
         <div>
           <h2 class="text-3xl md:text-5xl font-bold">Selected Work</h2>
-          
         </div>
         <a href="#contact" class="hidden md:inline-flex px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Work with Us</a>
       </div>
@@ -137,6 +139,7 @@
       <!-- Puzzle River -->
       <div class="mt-8 puzzle group relative overflow-hidden">
         <div id="puzzleTrack" class="puzzle-track will-change-transform"></div>
+        <div id="puzzleTrack3" class="puzzle-track one will-change-transform mt-3"></div>
       </div>
 
       <div class="mt-8 text-center">
@@ -223,7 +226,6 @@
             <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">∞</div><div>Ideas brewing</div></div>
           </div>
         </div>
-        
       </div>
     </div>
   </section>
@@ -234,7 +236,7 @@
       <h2 class="text-3xl md:text-5xl font-bold">Let’s build something wild</h2>
       <p class="mt-4 text-blume-sub">Whether it’s a music video, a brand world, or an experiment — we’re here to make visuals that move people.</p>
       <div class="mt-8">
-        <form class="grid sm:grid-cols-2 gap-3 text-left">
+        <form class="grid sm:grid-cols-2 gap-3 text-left" onsubmit="event.preventDefault(); alert('Thanks! We\'ll be in touch.');">
           <input type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
           <input type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
           <input type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
@@ -263,26 +265,25 @@
     </div>
   </footer>
 
-  <!-- Inline manifest (replace with your own artwork URLs) -->
+  <!-- Inline manifest: images, gifs, and videos are supported -->
   <script id="artworks-data" type="application/json">
-{
-  "images": [
-    "./img1.jpg",
-    "./img2.jpg",
-    "./img3.jpg",
-    "./img4.jpg",
-    "./img5.jpg",
-    "./img6.jpg",
-    "./img7.jpg",
-    "./img8.jpg",
-    "./img9.jpg",
-    "./img10.jpg",
-    "./img11.jpg",
-    "./img13.jpg",
-    "./img14.jpg"
-  ]
-}
-</script>
+  {
+    "images": [
+      "./img1.jpg",
+      "./img2.jpg",
+      "./img3.jpg",
+      "./img4.jpg",
+      "./img5.jpg",
+      "./img7.jpg",
+      "./img8.jpg",
+      "./img9.jpg",
+      "./img10.jpg",
+      "./img11.jpg",
+      "./img13.jpg",
+      "./img14.gif"
+    ]
+  }
+  </script>
 
   <script>
   // --- Nav ---
@@ -291,12 +292,61 @@
   btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // --- Two-row Puzzle River Loader (gap-free packer) ---
+  // Utility: classify by extension
+  function extOf(u){ const m = (u.split('?')[0].match(/\.([a-zA-Z0-9]+)$/)||[])[1]; return (m||'').toLowerCase(); }
+  const IMAGE_EXTS = new Set(['jpg','jpeg','png','gif','webp']);
+  const VIDEO_EXTS = new Set(['mp4','webm','mov']);
+
+  // Deep-link: detail view template (?art=URL)
+  (function detailRouter(){
+    const params = new URLSearchParams(location.search);
+    const art = params.get('art');
+    if(!art) return;
+    const src = decodeURIComponent(art);
+    const isImg = IMAGE_EXTS.has(extOf(src));
+    const isVid = VIDEO_EXTS.has(extOf(src));
+
+    const root = document.body;
+    root.innerHTML = `
+      <main class="min-h-screen bg-[radial-gradient(ellipse_at_top,rgba(255,106,0,0.08),transparent_60%)]">
+        <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3"><img src="https://blume-visuals.com/assets/images/logo.png" class="h-10" alt="Blume"></a>
+            <a href="/" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10">Back</a>
+          </div>
+        </header>
+        <section class="detail-enter max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+            <div class="relative aspect-[16/9] md:aspect-[21/9]">
+              ${isVid ? `
+                <video src="${src}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+              ` : `
+                <img src="${src}" alt="Artwork" class="absolute inset-0 w-full h-full object-cover"/>
+              `}
+            </div>
+          </div>
+          <div class="mt-6 grid md:grid-cols-3 gap-6">
+            <div class="md:col-span-2">
+              <h1 class="text-3xl font-bold">Project Title</h1>
+              <p class="text-blume-sub mt-2">A short write-up can be injected here from a CMS or JSON in the future. This template view is rendered dynamically based on the clicked tile.</p>
+            </div>
+            <div class="space-y-2 text-sm text-blume-sub">
+              <div class="rounded-xl border border-white/10 bg-white/5 p-4"><div class="text-white font-semibold">Role</div><div>Direction, 3D, Edit</div></div>
+              <div class="rounded-xl border border-white/10 bg-white/5 p-4"><div class="text-white font-semibold">Year</div><div>${new Date().getFullYear()}</div></div>
+              <a href="${src}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Open Asset</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    `;
+  })();
+
+  // --- Puzzle River Loader (gap-free 2-row packer + extra single row) ---
   (async function loadBlumePuzzle(){
     const track = document.getElementById('puzzleTrack');
-    if(!track) return;
+    if(!track) return; // detail template replaced page
 
-    // ----- collect sources (inline -> /artworks.json -> probe img1..img120.jpg) -----
+    // ----- collect sources (inline -> /artworks.json -> probe img1..img120.(ext)) -----
     function fromInline(){
       const el = document.getElementById('artworks-data'); if(!el) return [];
       try { const d = JSON.parse(el.textContent||'{}'); return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
@@ -307,9 +357,21 @@
         return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
     }
     async function probeSeq(){
-      const seq = Array.from({length:120},(_,i)=>`./img${i+1}.jpg`);
-      const ok=[]; await Promise.all(seq.map(src=>new Promise(res=>{const im=new Image(); im.onload=()=>{ok.push(src);res()}; im.onerror=()=>res(); im.src=src;})));
-      return ok;
+      const bases = Array.from({length:120},(_,i)=>`./img${i+1}`);
+      const exts  = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.webm'];
+      const found = new Set();
+      await Promise.all(
+        bases.flatMap(base => exts.map(ext => new Promise(res=>{
+          // For probing, use Image for images and fetch HEAD for videos (Image can't load videos reliably)
+          const isVid = ['.mp4','.webm'].includes(ext);
+          if(isVid){
+            fetch(base+ext, {method:'HEAD'}).then(h=>{ if(h.ok) found.add(base+ext); res(); }).catch(()=>res());
+          } else {
+            const im=new Image(); im.onload=()=>{found.add(base+ext);res()}; im.onerror=()=>res(); im.src=base+ext;
+          }
+        })))
+      );
+      return Array.from(found);
     }
 
     let sources = fromInline();
@@ -317,27 +379,36 @@
     if(!sources.length) sources = await probeSeq();
     if(!sources.length){ track.innerHTML = '<div class="text-center text-blume-sub py-6">No artworks found.</div>'; return; }
 
-    // ----- layout recipe (w,h). We’ll pack these without gaps. -----
-    const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
-
-    // Helper: make tile
-    function tile(src,i,[w,h]){
+    // ----- helpers: tile builders -----
+    function buildTile(src, i, w=1, h=1){
       const a = document.createElement('a');
-      a.href=src; a.target="_blank"; a.rel="noopener";
+      a.href = `?art=${encodeURIComponent(src)}`; // dynamic template view
       a.className='tile group';
       a.style.gridColumn = `span ${w}`;
       a.style.gridRow    = `span ${Math.min(h,2)}`;
+
+      const isImg = IMAGE_EXTS.has(extOf(src));
+      const isVid = VIDEO_EXTS.has(extOf(src));
+
+      let media = '';
+      if(isVid){
+        media = `<video autoplay muted loop playsinline>
+                   <source src="${src}" type="video/${extOf(src)}" />
+                 </video>`;
+      } else {
+        media = `<img loading="lazy" src="${src}" alt="Artwork ${i+1}">`;
+      }
       a.innerHTML = `
-        <img loading="lazy" src="${src}" alt="Artwork ${i+1}">
+        ${media}
         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
       return a;
     }
 
-    // ----- gap-free packer for 2 rows -----
-    // Track column occupancy: for each column, top/bottom booleans.
-    const cols = []; // array of {top:boolean, bottom:boolean}
-    function ensureCol(idx){ while(cols.length<=idx) cols.push({top:false,bottom:false}); }
+    // ===== Two-row gap-free packer (unchanged core idea) =====
+    const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
 
+    const cols = []; // occupancy per column: {top:boolean, bottom:boolean}
+    function ensureCol(idx){ while(cols.length<=idx) cols.push({top:false,bottom:false}); }
     function canPlace(col,w,h){
       for(let c=col;c<col+w;c++){
         ensureCol(c);
@@ -346,72 +417,64 @@
       }
       return true;
     }
-
     function occupy(col,w,h,placeBottom=false){
       for(let c=col;c<col+w;c++){
         if(h===2){ cols[c].top=true; cols[c].bottom=true; }
-        else {
-          if(placeBottom) cols[c].bottom=true; else cols[c].top=true;
-        }
+        else { if(placeBottom) cols[c].bottom=true; else cols[c].top=true; }
       }
     }
+    function nextHoleCol(){ for(let i=0;i<cols.length;i++){ if(cols[i].top && !cols[i].bottom) return i; } return -1; }
 
-    function nextHoleCol(){
-      for(let i=0;i<cols.length;i++){
-        if(cols[i].top && !cols[i].bottom) return i;
-      }
-      return -1;
-    }
-
-    const seq = [];
-    let si = 0; // source index
-    let col = 0;
-
-    function pushArt(w,h,placeBottom=false){
-      const src = sources[si++ % sources.length];
-      seq.push({src, span:[w,h], col, placeBottom});
-    }
-
-    const targetCount = Math.max(sources.length, 12);
+    const seq = []; let si = 0; let col = 0; const targetCount = Math.max(sources.length, 12);
+    function pushArt(w,h,placeBottom=false){ const src = sources[si++ % sources.length]; seq.push({src, span:[w,h], col, placeBottom}); }
     let ri = 0;
     while(seq.length < targetCount){
-      // fill dangling bottom holes first
       let hole = nextHoleCol();
-      if(hole !== -1){
-        col = hole;
-        if(canPlace(col,1,1)){ occupy(col,1,1,true); pushArt(1,1,true); continue; }
-      }
-
+      if(hole !== -1){ col = hole; if(canPlace(col,1,1)){ occupy(col,1,1,true); pushArt(1,1,true); continue; } }
       const [w,h] = recipe[ri++ % recipe.length];
       while(!canPlace(col,w,h)){
         hole = nextHoleCol();
-        if(hole !== -1){
-          col = hole; occupy(col,1,1,true); pushArt(1,1,true);
-        }else{
-          ensureCol(col);
-          if(cols[col].top && !cols[col].bottom){ occupy(col,1,1,true); pushArt(1,1,true); }
-          else col += 1;
-        }
+        if(hole !== -1){ col = hole; occupy(col,1,1,true); pushArt(1,1,true); }
+        else { ensureCol(col); if(cols[col].top && !cols[col].bottom){ occupy(col,1,1,true); pushArt(1,1,true); } else col += 1; }
       }
-      occupy(col,w,h,false); pushArt(w,h,false);
-      col += w;
+      occupy(col,w,h,false); pushArt(w,h,false); col += w;
     }
 
-    // ----- render: duplicate once for seamless loop -----
+    // Render: duplicate once for seamless loop
     track.innerHTML = '';
-    const set1 = seq.map((t,i)=> tile(t.src,i,t.span));
-    const set2 = seq.map((t,i)=> tile(t.src,i+set1.length,t.span));
+    const set1 = seq.map((t,i)=> buildTile(t.src,i,t.span[0],t.span[1]));
+    const set2 = seq.map((t,i)=> buildTile(t.src,i+set1.length,t.span[0],t.span[1]));
     set1.concat(set2).forEach(el=> track.appendChild(el));
 
     requestAnimationFrame(()=>{
       const gap = parseFloat(getComputedStyle(track).gap||'0');
       const width = set1.reduce((w,el)=> w + el.getBoundingClientRect().width + gap, 0);
       track.style.setProperty('--loop', `${width}px`);
-      const speed = Math.max(35, Math.min(120, Math.round(width/75)));
+      const speed = Math.max(35, Math.min(250, Math.round(width/75)));
       track.style.setProperty('--duration', `${speed}s`);
       track.classList.add('run');
     });
+
+    // ===== Third single-row track =====
+    const track3 = document.getElementById('puzzleTrack3');
+    if(track3){
+      const recipe1w2w = [1,1,2,1,2,1,1,2,1,1,2,1];
+      const seq3 = []; const baseCount = Math.max(sources.length, 12);
+      for(let i=0;i<baseCount;i++){ const src = sources[i % sources.length]; const w = recipe1w2w[i % recipe1w2w.length]; seq3.push({src, w}); }
+      track3.innerHTML = '';
+      const setA = seq3.map((t,i)=> buildTile(t.src, i, t.w, 1));
+      const setB = seq3.map((t,i)=> buildTile(t.src, i+setA.length, t.w, 1));
+      setA.concat(setB).forEach(el => track3.appendChild(el));
+      requestAnimationFrame(()=>{
+        const gap = parseFloat(getComputedStyle(track3).gap || '0');
+        const width = setA.reduce((w,el)=> w + el.getBoundingClientRect().width + gap, 0);
+        track3.style.setProperty('--loop', `${width}px`);
+        const speed = Math.max(35, Math.min(250, Math.round(width/75)));
+        track3.style.setProperty('--duration', `${speed}s`);
+        track3.classList.add('run','reverse');
+      });
+    }
   })();
-</script>
+  </script>
 </body>
 </html>
