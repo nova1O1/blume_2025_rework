@@ -13,20 +13,10 @@
       theme: {
         extend: {
           colors: {
-            blume: {
-              bg: '#1C1C1C',
-              tint: '#2A2A2A',
-              text: '#F3F3F3',
-              sub: '#B3B3B3',
-              accent: '#FF6A00'
-            }
+            blume: { bg: '#1C1C1C', tint: '#2A2A2A', text: '#F3F3F3', sub: '#B3B3B3', accent: '#FF6A00' }
           },
-          fontFamily: {
-            sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"]
-          },
-          boxShadow: {
-            glow: '0 0 0 1px rgba(255,106,0,0.25), 0 10px 30px rgba(0,0,0,0.5)'
-          },
+          fontFamily: { sans: ["Inter","ui-sans-serif","system-ui","-apple-system","Segoe UI","Roboto","Helvetica Neue","Arial","Noto Sans","sans-serif"] },
+          boxShadow: { glow: '0 0 0 1px rgba(255,106,0,0.25), 0 10px 30px rgba(0,0,0,0.5)' },
           backgroundImage: {
             'grid-faint': 'radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)',
             'hero-gradient': 'linear-gradient(180deg, rgba(255,106,0,0.08), rgba(28,28,28,0) 30%, rgba(28,28,28,0) 70%, rgba(255,106,0,0.06))'
@@ -110,14 +100,10 @@
         <source src="./intro.mp4" type="video/mp4" />
       </video>
 
-      <!-- Overlay box BOTTOM-LEFT (per preference) -->
+      <!-- Overlay box BOTTOM-LEFT -->
       <div class="absolute left-6 bottom-6 md:left-10 md:bottom-10 max-w-2xl p-6 md:p-7 rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border border-white/10 text-left">
-        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
-          Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.
-        </h1>
-        <p class="mt-4 text-blume-sub text-base md:text-lg">
-          Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.
-        </p>
+        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.</h1>
+        <p class="mt-4 text-blume-sub text-base md:text-lg">Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.</p>
         <div class="mt-6 flex flex-wrap justify-start gap-3">
           <a href="#work" class="px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">See Our Work</a>
           <a href="#contact" class="px-4 py-2 rounded-xl bg-white/5 text-white border border-white/10 hover:bg-white/10">Start a Project</a>
@@ -126,30 +112,25 @@
     </div>
   </section>
 
-  <!-- GALLERY / SELECTED WORK (Two-row Puzzle River + extra third row) -->
+  <!-- GALLERY / SELECTED WORK -->
   <section id="work" class="py-12 md:py-16">
     <div class="w-full px-2 sm:px-4 lg:px-6">
       <div class="flex items-end justify-between gap-6 max-w-full px-2 sm:px-4">
-        <div>
-          <h2 class="text-3xl md:text-5xl font-bold">Selected Work</h2>
-        </div>
+        <div><h2 class="text-3xl md:text-5xl font-bold">Selected Work</h2></div>
         <a href="#contact" class="hidden md:inline-flex px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Work with Us</a>
       </div>
-
-      <!-- Puzzle River -->
       <div class="mt-8 puzzle group relative overflow-hidden">
         <div id="puzzleTrack" class="puzzle-track will-change-transform"></div>
         <div id="puzzleTrack3" class="puzzle-track one will-change-transform mt-3"></div>
       </div>
-
       <div class="mt-8 text-center">
         <a href="#contact" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</a>
       </div>
     </div>
   </section>
 
-  <!-- CAPABILITIES / SERVICES -->
-  <section id="services" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40/"> 
+  <!-- SERVICES -->
+  <section id="services" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40/">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between gap-6">
         <div>
@@ -189,7 +170,7 @@
     </div>
   </section>
 
-  <!-- APPROACH / PROCESS -->
+  <!-- PROCESS -->
   <section id="process" class="py-16 md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-3xl md:text-5xl font-bold">How We Work</h2>
@@ -230,18 +211,21 @@
     </div>
   </section>
 
-  <!-- CONTACT CTA + FORM -->
+  <!-- CONTACT -->
   <section id="contact" class="py-16 md:py-24">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl md:text-5xl font-bold">Let’s build something wild</h2>
       <p class="mt-4 text-blume-sub">Whether it’s a music video, a brand world, or an experiment — we’re here to make visuals that move people.</p>
       <div class="mt-8">
-        <form class="grid sm:grid-cols-2 gap-3 text-left" onsubmit="event.preventDefault(); alert('Thanks! We\'ll be in touch.');">
-          <input type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
-          <input type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
-          <input type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
-          <textarea placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2"></textarea>
-          <button type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
+        <!-- CONTACT FORM (wired to /api/contact) -->
+        <form id="contactForm" class="grid sm:grid-cols-2 gap-3 text-left">
+          <input name="name" type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input name="email" type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input name="company" type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
+          <textarea name="message" placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2" required></textarea>
+          <input type="text" name="honeypot" tabindex="-1" autocomplete="off" class="hidden" />
+          <button id="contactSubmit" type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
+          <p id="contactMsg" class="sm:col-span-2 text-sm mt-1"></p>
         </form>
         <div class="mt-6 text-sm text-blume-sub">Prefer email? <a class="underline hover:text-white" href="mailto:hello@blume-visuals.com">hello@blume-visuals.com</a></div>
       </div>
@@ -269,18 +253,9 @@
   <script id="artworks-data" type="application/json">
   {
     "images": [
-      "./img1.jpg",
-      "./img2.jpg",
-      "./img3.jpg",
-      "./img4.jpg",
-      "./img5.jpg",
-      "./img7.jpg",
-      "./img8.jpg",
-      "./img9.jpg",
-      "./img10.jpg",
-      "./img11.jpg",
-      "./img13.jpg",
-      "./img14.gif"
+      "./img1.jpg","./img2.jpg","./img3.jpg","./img4.jpg","./img5.jpg",
+      "./img7.jpg","./img8.jpg","./img9.jpg","./img10.jpg","./img11.jpg",
+      "./img13.jpg","./img14.gif"
     ]
   }
   </script>
@@ -328,7 +303,7 @@
           <div class="mt-6 grid md:grid-cols-3 gap-6">
             <div class="md:col-span-2">
               <h1 class="text-3xl font-bold">Project Title</h1>
-              <p class="text-blume-sub mt-2">A short write-up can be injected here from a CMS or JSON in the future. This template view is rendered dynamically based on the clicked tile.</p>
+              <p class="text-blume-sub mt-2">A short write-up can be injected here later. This template view is rendered dynamically based on the clicked tile.</p>
             </div>
             <div class="space-y-2 text-sm text-blume-sub">
               <div class="rounded-xl border border-white/10 bg-white/5 p-4"><div class="text-white font-semibold">Role</div><div>Direction, 3D, Edit</div></div>
@@ -341,12 +316,11 @@
     `;
   })();
 
-  // --- Puzzle River Loader (gap-free 2-row packer + extra single row) ---
+  // --- Puzzle River Loader (2-row + extra 1-row) ---
   (async function loadBlumePuzzle(){
     const track = document.getElementById('puzzleTrack');
     if(!track) return; // detail template replaced page
 
-    // ----- collect sources (inline -> /artworks.json -> probe img1..img120.(ext)) -----
     function fromInline(){
       const el = document.getElementById('artworks-data'); if(!el) return [];
       try { const d = JSON.parse(el.textContent||'{}'); return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
@@ -362,13 +336,9 @@
       const found = new Set();
       await Promise.all(
         bases.flatMap(base => exts.map(ext => new Promise(res=>{
-          // For probing, use Image for images and fetch HEAD for videos (Image can't load videos reliably)
           const isVid = ['.mp4','.webm'].includes(ext);
-          if(isVid){
-            fetch(base+ext, {method:'HEAD'}).then(h=>{ if(h.ok) found.add(base+ext); res(); }).catch(()=>res());
-          } else {
-            const im=new Image(); im.onload=()=>{found.add(base+ext);res()}; im.onerror=()=>res(); im.src=base+ext;
-          }
+          if(isVid){ fetch(base+ext,{method:'HEAD'}).then(h=>{ if(h.ok) found.add(base+ext); res(); }).catch(()=>res()); }
+          else { const im=new Image(); im.onload=()=>{found.add(base+ext);res()}; im.onerror=()=>res(); im.src=base+ext; }
         })))
       );
       return Array.from(found);
@@ -379,101 +349,58 @@
     if(!sources.length) sources = await probeSeq();
     if(!sources.length){ track.innerHTML = '<div class="text-center text-blume-sub py-6">No artworks found.</div>'; return; }
 
-    // ----- helpers: tile builders -----
-    function buildTile(src, i, w=1, h=1){
+    function buildTile(src,i,w=1,h=1){
       const a = document.createElement('a');
-      a.href = `?art=${encodeURIComponent(src)}`; // dynamic template view
+      a.href = `?art=${encodeURIComponent(src)}`;
       a.className='tile group';
-      a.style.gridColumn = `span ${w}`;
-      a.style.gridRow    = `span ${Math.min(h,2)}`;
-
-      const isImg = IMAGE_EXTS.has(extOf(src));
+      a.style.gridColumn = `span ${w}`; a.style.gridRow = `span ${Math.min(h,2)}`;
       const isVid = VIDEO_EXTS.has(extOf(src));
-
-      let media = '';
-      if(isVid){
-        media = `<video autoplay muted loop playsinline>
-                   <source src="${src}" type="video/${extOf(src)}" />
-                 </video>`;
-      } else {
-        media = `<img loading="lazy" src="${src}" alt="Artwork ${i+1}">`;
-      }
-      a.innerHTML = `
-        ${media}
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
+      a.innerHTML = isVid
+        ? `<video autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class=\"absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent\"></div>`
+        : `<img loading=\"lazy\" src=\"${src}\" alt=\"Artwork ${i+1}\"><div class=\"absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent\"></div>`;
       return a;
     }
 
-    // ===== Two-row gap-free packer (unchanged core idea) =====
     const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
+    const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
+    function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
+    function occupy(col,w,h,bottom=false){ for(let c=col;c<col+w;c++){ if(h===2){ cols[c].top=true; cols[c].bottom=true; } else { if(bottom) cols[c].bottom=true; else cols[c].top=true; } } }
+    function nextHole(){ for(let i=0;i<cols.length;i++){ if(cols[i].top&&!cols[i].bottom) return i; } return -1; }
 
-    const cols = []; // occupancy per column: {top:boolean, bottom:boolean}
-    function ensureCol(idx){ while(cols.length<=idx) cols.push({top:false,bottom:false}); }
-    function canPlace(col,w,h){
-      for(let c=col;c<col+w;c++){
-        ensureCol(c);
-        if(h===2){ if(cols[c].top || cols[c].bottom) return false; }
-        else { if(cols[c].top) return false; }
-      }
-      return true;
-    }
-    function occupy(col,w,h,placeBottom=false){
-      for(let c=col;c<col+w;c++){
-        if(h===2){ cols[c].top=true; cols[c].bottom=true; }
-        else { if(placeBottom) cols[c].bottom=true; else cols[c].top=true; }
-      }
-    }
-    function nextHoleCol(){ for(let i=0;i<cols.length;i++){ if(cols[i].top && !cols[i].bottom) return i; } return -1; }
+    const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
+    function push(w,h,b=false){ const src=sources[si++%sources.length]; seq.push({src,span:[w,h],col,b}); }
+    while(seq.length<target){ let hole=nextHole(); if(hole!==-1){ col=hole; if(canPlace(col,1,1)){ occupy(col,1,1,true); push(1,1,true); continue; } }
+      const [w,h]=recipe[ri++%recipe.length]; while(!canPlace(col,w,h)){ hole=nextHole(); if(hole!==-1){ col=hole; occupy(col,1,1,true); push(1,1,true); } else { ensureCol(col); if(cols[col].top&&!cols[col].bottom){ occupy(col,1,1,true); push(1,1,true); } else col+=1; } }
+      occupy(col,w,h,false); push(w,h,false); col+=w; }
 
-    const seq = []; let si = 0; let col = 0; const targetCount = Math.max(sources.length, 12);
-    function pushArt(w,h,placeBottom=false){ const src = sources[si++ % sources.length]; seq.push({src, span:[w,h], col, placeBottom}); }
-    let ri = 0;
-    while(seq.length < targetCount){
-      let hole = nextHoleCol();
-      if(hole !== -1){ col = hole; if(canPlace(col,1,1)){ occupy(col,1,1,true); pushArt(1,1,true); continue; } }
-      const [w,h] = recipe[ri++ % recipe.length];
-      while(!canPlace(col,w,h)){
-        hole = nextHoleCol();
-        if(hole !== -1){ col = hole; occupy(col,1,1,true); pushArt(1,1,true); }
-        else { ensureCol(col); if(cols[col].top && !cols[col].bottom){ occupy(col,1,1,true); pushArt(1,1,true); } else col += 1; }
-      }
-      occupy(col,w,h,false); pushArt(w,h,false); col += w;
-    }
+    const trackEl=track; trackEl.innerHTML='';
+    const set1=seq.map((t,i)=>buildTile(t.src,i,t.span[0],t.span[1]));
+    const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1]));
+    set1.concat(set2).forEach(el=>trackEl.appendChild(el));
+    requestAnimationFrame(()=>{ const gap=parseFloat(getComputedStyle(trackEl).gap||'0'); const width=set1.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0); trackEl.style.setProperty('--loop',`${width}px`); const speed=Math.max(35,Math.min(250,Math.round(width/75))); trackEl.style.setProperty('--duration',`${speed}s`); trackEl.classList.add('run'); });
 
-    // Render: duplicate once for seamless loop
-    track.innerHTML = '';
-    const set1 = seq.map((t,i)=> buildTile(t.src,i,t.span[0],t.span[1]));
-    const set2 = seq.map((t,i)=> buildTile(t.src,i+set1.length,t.span[0],t.span[1]));
-    set1.concat(set2).forEach(el=> track.appendChild(el));
+    const track3=document.getElementById('puzzleTrack3'); if(track3){ const recipe1=[1,1,2,1,2,1,1,2,1,1,2,1]; const seq3=[]; const base=Math.max(sources.length,12); for(let i=0;i<base;i++){ const src=sources[i%sources.length]; const w=recipe1[i%recipe1.length]; seq3.push({src,w}); } track3.innerHTML=''; const setA=seq3.map((t,i)=>buildTile(t.src,i,t.w,1)); const setB=seq3.map((t,i)=>buildTile(t.src,i+setA.length,t.w,1)); setA.concat(setB).forEach(el=>track3.appendChild(el)); requestAnimationFrame(()=>{ const gap=parseFloat(getComputedStyle(track3).gap||'0'); const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0); track3.style.setProperty('--loop',`${width}px`); const speed=Math.max(35,Math.min(250,Math.round(width/75))); track3.style.setProperty('--duration',`${speed}s`); track3.classList.add('run','reverse'); }); }
+  })();
 
-    requestAnimationFrame(()=>{
-      const gap = parseFloat(getComputedStyle(track).gap||'0');
-      const width = set1.reduce((w,el)=> w + el.getBoundingClientRect().width + gap, 0);
-      track.style.setProperty('--loop', `${width}px`);
-      const speed = Math.max(35, Math.min(250, Math.round(width/75)));
-      track.style.setProperty('--duration', `${speed}s`);
-      track.classList.add('run');
+  // --- Contact form handler (POST to /api/contact) ---
+  (function(){
+    const form=document.getElementById('contactForm');
+    const btn=document.getElementById('contactSubmit');
+    const msg=document.getElementById('contactMsg');
+    if(!form) return;
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      msg.textContent=''; msg.className='sm:col-span-2 text-sm mt-1';
+      btn.disabled=true; btn.style.opacity=0.7;
+      const data=Object.fromEntries(new FormData(form).entries());
+      try{
+        const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+        const out=await res.json();
+        if(out.ok){ msg.textContent='Thanks — we\'ll get back to you shortly.'; msg.classList.add('text-green-400'); form.reset(); }
+        else{ msg.textContent='Error: '+(out.error||'Email send failed'); msg.classList.add('text-red-400'); }
+      }catch(err){ msg.textContent='Network error. Please try again.'; msg.classList.add('text-red-400'); }
+      finally{ btn.disabled=false; btn.style.opacity=1; }
     });
-
-    // ===== Third single-row track =====
-    const track3 = document.getElementById('puzzleTrack3');
-    if(track3){
-      const recipe1w2w = [1,1,2,1,2,1,1,2,1,1,2,1];
-      const seq3 = []; const baseCount = Math.max(sources.length, 12);
-      for(let i=0;i<baseCount;i++){ const src = sources[i % sources.length]; const w = recipe1w2w[i % recipe1w2w.length]; seq3.push({src, w}); }
-      track3.innerHTML = '';
-      const setA = seq3.map((t,i)=> buildTile(t.src, i, t.w, 1));
-      const setB = seq3.map((t,i)=> buildTile(t.src, i+setA.length, t.w, 1));
-      setA.concat(setB).forEach(el => track3.appendChild(el));
-      requestAnimationFrame(()=>{
-        const gap = parseFloat(getComputedStyle(track3).gap || '0');
-        const width = setA.reduce((w,el)=> w + el.getBoundingClientRect().width + gap, 0);
-        track3.style.setProperty('--loop', `${width}px`);
-        const speed = Math.max(35, Math.min(250, Math.round(width/75)));
-        track3.style.setProperty('--duration', `${speed}s`);
-        track3.classList.add('run','reverse');
-      });
-    }
   })();
   </script>
 </body>
