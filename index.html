@@ -41,7 +41,7 @@
     .puzzle{position:relative}
     .puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 4%, rgba(10,10,10,0) 10%, rgba(10,10,10,0) 90%, rgba(10,10,10,.35) 96%, rgba(10,10,10,0) 100%)}
     .puzzle-track{display:grid; grid-auto-flow:column dense; align-items:stretch; gap:var(--gap, .75rem);
-      grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);}
+      grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);} 
     @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
@@ -59,9 +59,34 @@
     /* Detail view (single-template page feel) */
     .detail-enter{animation:fadeIn .3s ease both}
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+    /* ===== Preloader Overlay ===== */
+    body:not(.ready) { overflow: hidden; }
+    #preloader { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; background: radial-gradient(120% 120% at 10% 10%, #1C1C1C, #0A0A0A); transition: opacity .6s ease, visibility .6s ease; }
+    #preloader.hidden { opacity: 0; visibility: hidden; }
+    #preloader .loader-wrap { display: grid; place-items: center; gap: 16px; }
+    #preloader .logo { filter: drop-shadow(0 6px 20px rgba(0,0,0,.5)); }
+    #preloader .ring { width: 56px; height: 56px; border-radius: 50%; border: 2px solid rgba(255,255,255,.08); border-top-color: #FF6A00; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #preloader .progress { width: 220px; height: 6px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; position: relative; }
+    #preloader .progress::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,106,0,.0) 0%, rgba(255,106,0,.6) 50%, rgba(255,106,0,.0) 100%); transform: translateX(-100%); animation: indet 1.2s infinite; }
+    @keyframes indet { to { transform: translateX(100%);} }
+    #preloader .pct { color: #fff; font: 500 13px/1.2 system-ui, sans-serif; opacity: .85; }
+    main, header, footer, section { opacity: 0; transform: translateY(4px); transition: opacity .5s ease, transform .5s ease; }
+    body.ready main, body.ready header, body.ready footer, body.ready section { opacity: 1; transform: none; }
   </style>
 </head>
 <body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black" style="background:linear-gradient(to bottom,#1C1C1C 0%,#0A0A0A 100%);">
+  <!-- Preloader Overlay (non-destructive) -->
+  <div id="preloader" role="status" aria-live="polite">
+    <div class="loader-wrap">
+      <img class="logo" src="https://blume-visuals.com/assets/images/logo.png" alt="Blume" width="180" height="44" />
+      <div class="ring"></div>
+      <div class="progress"></div>
+      <p class="pct">Loading…</p>
+    </div>
+  </div>
+
   <!-- NAV -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,7 +99,7 @@
           <a href="#about" class="hover:text-white">About</a>
           <a href="#process" class="hover:text-white">How We Work</a>
           <a href="#services" class="hover:text-white">Services</a>
-          <a href="#contact" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/20  text-white border border-white/10 shadow-glow">Start a Project</a>
+          <a href="#contact" class="px-3 py-1.5 rounded-full bg:white/5 hover:bg-white/20  text-white border border-white/10 shadow-glow">Start a Project</a>
         </nav>
         <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10 text-blume-sub hover:text-white" aria-label="Open Menu">☰</button>
       </div>
@@ -96,7 +121,7 @@
     <div class="absolute inset-0 bg-hero-gradient"></div>
 
     <div class="w-full relative border-b border-white/10 overflow-hidden" style="aspect-ratio:21/9; min-height:600px;">
-      <video autoplay muted loop playsinline class="w-full h-full object-cover">
+      <video autoplay muted loop playsinline class="w-full h-full object-cover" poster="/img/hero-poster.avif">
         <source src="./intro.mp4" type="video/mp4" />
       </video>
 
@@ -408,6 +433,44 @@
       }catch(err){ msg.textContent='Network error. Please try again.'; msg.classList.add('text-red-400'); }
       finally{ btn.disabled=false; btn.style.opacity=1; }
     });
+  })();
+
+  // --- Preloader logic (non-destructive) ---
+  (function(){
+    const pre = document.getElementById('preloader');
+    if(!pre) return;
+    const MIN_SHOW_MS = 600;      // avoid flicker
+    const MAX_WAIT_MS = 6500;     // safety cap
+    const start = performance.now();
+
+    function hide(){
+      const dt = performance.now() - start;
+      const wait = Math.max(0, MIN_SHOW_MS - dt);
+      setTimeout(()=>{
+        document.body.classList.add('ready');
+        pre.classList.add('hidden');
+        setTimeout(()=> pre.remove(), 800);
+      }, wait);
+    }
+
+    // Prefer hero readiness + window load
+    const heroVid = document.querySelector('section#top video');
+    let heroReady = !heroVid; // if no video, proceed
+    if(heroVid){
+      if(heroVid.readyState >= 2) heroReady = true; // HAVE_CURRENT_DATA
+      else heroVid.addEventListener('loadeddata', ()=>{ heroReady = true; }, { once:true });
+    }
+
+    const onLoad = new Promise(res => {
+      if (document.readyState === 'complete') res();
+      else window.addEventListener('load', res, { once:true });
+    });
+
+    const onTimeout = new Promise(res => setTimeout(res, MAX_WAIT_MS));
+
+    Promise.race([Promise.all([onLoad]).then(()=>heroReady?undefined:new Promise(r=>{
+      const chk = setInterval(()=>{ if(heroReady){ clearInterval(chk); r(); } }, 60); })), onTimeout])
+      .then(hide);
   })();
   </script>
 </body>
