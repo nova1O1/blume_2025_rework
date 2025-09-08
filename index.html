@@ -41,7 +41,7 @@
     .puzzle{position:relative}
     .puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 4%, rgba(10,10,10,0) 10%, rgba(10,10,10,0) 90%, rgba(10,10,10,.35) 96%, rgba(10,10,10,0) 100%)}
     .puzzle-track{display:grid; grid-auto-flow:column dense; align-items:stretch; gap:var(--gap, .75rem);
-      grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);} 
+      grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);}
     @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
@@ -56,37 +56,17 @@
     .reverse{animation-direction:reverse}
     @keyframes puzzle-scroll{to{transform:translateX(calc(-1 * var(--loop, 1000px)))}}
 
-    /* Detail view (single-template page feel) */
+    /* ===== Detail page gradient ===== */
+    .detail-bg{
+      background:
+        radial-gradient(50% 40% at 20% 0%, rgba(255,106,0,0.12), transparent 60%),
+        linear-gradient(to bottom,#1C1C1C 0%, #0A0A0A 100%);
+    }
     .detail-enter{animation:fadeIn .3s ease both}
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
-
-    /* ===== Preloader Overlay ===== */
-    body:not(.ready) { overflow: hidden; }
-    #preloader { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; background: radial-gradient(120% 120% at 10% 10%, #1C1C1C, #0A0A0A); transition: opacity .6s ease, visibility .6s ease; }
-    #preloader.hidden { opacity: 0; visibility: hidden; }
-    #preloader .loader-wrap { display: grid; place-items: center; gap: 16px; }
-    #preloader .logo { filter: drop-shadow(0 6px 20px rgba(0,0,0,.5)); }
-    #preloader .ring { width: 56px; height: 56px; border-radius: 50%; border: 2px solid rgba(255,255,255,.08); border-top-color: #FF6A00; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #preloader .progress { width: 220px; height: 6px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; position: relative; }
-    #preloader .progress::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,106,0,.0) 0%, rgba(255,106,0,.6) 50%, rgba(255,106,0,.0) 100%); transform: translateX(-100%); animation: indet 1.2s infinite; }
-    @keyframes indet { to { transform: translateX(100%);} }
-    #preloader .pct { color: #fff; font: 500 13px/1.2 system-ui, sans-serif; opacity: .85; }
-    main, header, footer, section { opacity: 0; transform: translateY(4px); transition: opacity .5s ease, transform .5s ease; }
-    body.ready main, body.ready header, body.ready footer, body.ready section { opacity: 1; transform: none; }
   </style>
 </head>
 <body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black" style="background:linear-gradient(to bottom,#1C1C1C 0%,#0A0A0A 100%);">
-  <!-- Preloader Overlay (non-destructive) -->
-  <div id="preloader" role="status" aria-live="polite">
-    <div class="loader-wrap">
-      <img class="logo" src="https://blume-visuals.com/assets/images/logo.png" alt="Blume" width="180" height="44" />
-      <div class="ring"></div>
-      <div class="progress"></div>
-      <p class="pct">Loading…</p>
-    </div>
-  </div>
-
   <!-- NAV -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,7 +79,7 @@
           <a href="#about" class="hover:text-white">About</a>
           <a href="#process" class="hover:text-white">How We Work</a>
           <a href="#services" class="hover:text-white">Services</a>
-          <a href="#contact" class="px-3 py-1.5 rounded-full bg:white/5 hover:bg-white/20  text-white border border-white/10 shadow-glow">Start a Project</a>
+          <a href="#contact" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/20  text-white border border-white/10 shadow-glow">Start a Project</a>
         </nav>
         <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10 text-blume-sub hover:text-white" aria-label="Open Menu">☰</button>
       </div>
@@ -115,18 +95,17 @@
     </div>
   </header>
 
-  <!-- HERO FULL-WIDTH REEL -->
+  <!-- HERO -->
   <section id="top" class="relative overflow-hidden">
     <div class="absolute inset-0 bg-grid-faint bg-[size:22px_22px] opacity-20 pointer-events-none"></div>
     <div class="absolute inset-0 bg-hero-gradient"></div>
 
     <div class="w-full relative border-b border-white/10 overflow-hidden" style="aspect-ratio:21/9; min-height:600px;">
-      <video autoplay muted loop playsinline class="w-full h-full object-cover" poster="/img/hero-poster.avif">
+      <video autoplay muted loop playsinline class="w-full h-full object-cover">
         <source src="./intro.mp4" type="video/mp4" />
       </video>
 
-      <!-- Overlay box BOTTOM-LEFT -->
-      <div class="absolute left-6 top-80 md:left-10 md:top-50 max-w-2xl p-6 md:p-7 rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border border-white/10 text-left">
+      <div class="absolute left-6 bottom-6 md:left-10 md:bottom-10 max-w-2xl p-6 md:p-7 rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border border-white/10 text-left">
         <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.</h1>
         <p class="mt-4 text-blume-sub text-base md:text-lg">Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.</p>
         <div class="mt-6 flex flex-wrap justify-start gap-3">
@@ -137,17 +116,19 @@
     </div>
   </section>
 
-  <!-- GALLERY / SELECTED WORK -->
+  <!-- GALLERY -->
   <section id="work" class="py-12 md:py-16">
     <div class="w-full px-2 sm:px-4 lg:px-6">
       <div class="flex items-end justify-between gap-6 max-w-full px-2 sm:px-4">
         <div><h2 class="text-3xl md:text-5xl font-bold">Selected Work</h2></div>
         <a href="#contact" class="hidden md:inline-flex px-4 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10">Work with Us</a>
       </div>
+
       <div class="mt-8 puzzle group relative overflow-hidden">
         <div id="puzzleTrack" class="puzzle-track will-change-transform"></div>
         <div id="puzzleTrack3" class="puzzle-track one will-change-transform mt-3"></div>
       </div>
+
       <div class="mt-8 text-center">
         <a href="#contact" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</a>
       </div>
@@ -167,29 +148,14 @@
         <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h3 class="text-xl font-semibold">Motion & 3D</h3>
           <p class="text-blume-sub mt-2">Promos, visualizers, show opens, music content, CG worlds, look-dev & simulations.</p>
-          <ul class="mt-4 text-sm text-blume-sub space-y-1 list-disc list-inside">
-            <li>Cinematic direction & editing</li>
-            <li>Simulation / particles / shaders</li>
-            <li>Styleframes & look dev</li>
-          </ul>
         </div>
         <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h3 class="text-xl font-semibold">Branding & Identity</h3>
           <p class="text-blume-sub mt-2">Logo systems, type, art direction and brand worlds that extend into motion.</p>
-          <ul class="mt-4 text-sm text-blume-sub space-y-1 list-disc list-inside">
-            <li>Logo & visual systems</li>
-            <li>Key art & campaign toolkits</li>
-            <li>Motion language & guidelines</li>
-          </ul>
         </div>
         <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h3 class="text-xl font-semibold">Digital & Interactive</h3>
           <p class="text-blume-sub mt-2">Sites and microsites that turn visuals into living experiences.</p>
-          <ul class="mt-4 text-sm text-blume-sub space-y-1 list-disc list-inside">
-            <li>Web design & development</li>
-            <li>Realtime/interactive experiments</li>
-            <li>Launch pages & reels</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -242,22 +208,12 @@
       <h2 class="text-3xl md:text-5xl font-bold">Let’s build something wild</h2>
       <p class="mt-4 text-blume-sub">Whether it’s a music video, a brand world, or an experiment — we’re here to make visuals that move people.</p>
       <div class="mt-8">
-        <!-- CONTACT FORM (wired to /api/contact) -->
-        <form id="contactForm" class="grid sm:grid-cols-2 gap-3 text-left">
-          <input name="name" type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
-          <input name="email" type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
-          <input name="company" type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
-          <textarea name="message" placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2" required></textarea>
-          <label class="sr-only" aria-hidden="true">Leave this field empty</label>
-          <input
-            type="text"
-            name="honeypot"
-            autocomplete="off"
-            tabindex="-1"
-            style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;"
-          />
-          <button id="contactSubmit" type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
-          <p id="contactMsg" class="sm:col-span-2 text-sm mt-1"></p>
+        <form class="grid sm:grid-cols-2 gap-3 text-left" onsubmit="event.preventDefault(); alert('Thanks! We\'ll be in touch.');">
+          <input type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
+          <textarea placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2"></textarea>
+          <button type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
         </form>
         <div class="mt-6 text-sm text-blume-sub">Prefer email? <a class="underline hover:text-white" href="mailto:hello@blume-visuals.com">hello@blume-visuals.com</a></div>
       </div>
@@ -281,13 +237,14 @@
     </div>
   </footer>
 
-  <!-- Inline manifest: images, gifs, and videos are supported -->
+  <!-- Inline manifest -->
   <script id="artworks-data" type="application/json">
   {
     "images": [
       "./img1.jpg","./img2.jpg","./img3.gif","./img4.jpg","./img5.jpg",
-      "./img7.jpg","./img8.jpg","./img9.jpg","./img10.jpg","./img11.jpg","./img12.gif",
-      "./img13.jpg","./img14.gif"
+      "./img1.gif","./img8.jpg","./img5.gif","./img10.jpg","./img11.jpg","./img12.gif",
+      "./img16.gif","./img14.gif", "./img13.jpg"
+    
     ]
   }
   </script>
@@ -299,43 +256,49 @@
   btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Utility: classify by extension
+  // Helpers
   function extOf(u){ const m = (u.split('?')[0].match(/\.([a-zA-Z0-9]+)$/)||[])[1]; return (m||'').toLowerCase(); }
   const IMAGE_EXTS = new Set(['jpg','jpeg','png','gif','webp']);
   const VIDEO_EXTS = new Set(['mp4','webm','mov']);
 
-  // Deep-link: detail view template (?art=URL)
+  /* =========================
+     OLD DYNAMIC PAGE: ?art=…
+     (Full body replace)
+  ==========================*/
   (function detailRouter(){
     const params = new URLSearchParams(location.search);
     const art = params.get('art');
     if(!art) return;
+
+    // IMPORTANT: decode exactly once (no double-encode when creating links)
     const src = decodeURIComponent(art);
     const isImg = IMAGE_EXTS.has(extOf(src));
     const isVid = VIDEO_EXTS.has(extOf(src));
 
-    const root = document.body;
-    root.innerHTML = `
-      <main class="min-h-screen bg-[radial-gradient(ellipse_at_top,rgba(255,106,0,0.08),transparent_60%)]">
+    document.body.innerHTML = `
+      <main class="min-h-screen detail-bg">
         <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" class="flex items-center gap-3"><img src="https://blume-visuals.com/assets/images/logo.png" class="h-10" alt="Blume"></a>
             <a href="/" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10">Back</a>
           </div>
         </header>
+
         <section class="detail-enter max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
             <div class="relative aspect-[16/9] md:aspect-[21/9]">
-              ${isVid ? `
-                <video src="${src}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover"></video>
-              ` : `
-                <img src="${src}" alt="Artwork" class="absolute inset-0 w-full h-full object-cover"/>
-              `}
+              ${
+                isVid
+                  ? `<video src="${src}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover"></video>`
+                  : `<img src="${src}" alt="Artwork" class="absolute inset-0 w-full h-full object-cover"/>`
+              }
             </div>
           </div>
+
           <div class="mt-6 grid md:grid-cols-3 gap-6">
             <div class="md:col-span-2">
               <h1 class="text-3xl font-bold">Project Title</h1>
-              <p class="text-blume-sub mt-2">A short write-up can be injected here later. This template view is rendered dynamically based on the clicked tile.</p>
+              <p class="text-blume-sub mt-2">A short write-up can be injected here later. This view is rendered dynamically from the clicked tile.</p>
             </div>
             <div class="space-y-2 text-sm text-blume-sub">
               <div class="rounded-xl border border-white/10 bg-white/5 p-4"><div class="text-white font-semibold">Role</div><div>Direction, 3D, Edit</div></div>
@@ -348,51 +311,45 @@
     `;
   })();
 
-  // --- Puzzle River Loader (2-row + extra 1-row) ---
+  /* =========================
+     Puzzle River Loader
+  ==========================*/
   (async function loadBlumePuzzle(){
     const track = document.getElementById('puzzleTrack');
-    if(!track) return; // detail template replaced page
+    if(!track) return; // We're in detail mode
 
     function fromInline(){
       const el = document.getElementById('artworks-data'); if(!el) return [];
-      try { const d = JSON.parse(el.textContent||'{}'); return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
-    }
-    async function fromFile(){
-      if(location.protocol==='file:') return [];
-      try { const r=await fetch('/artworks.json',{cache:'no-cache'}); if(!r.ok) return []; const d=await r.json();
-        return Array.isArray(d.images)? d.images.map(u=>u.startsWith('http')?u:new URL(u,location.href).href):[] } catch { return [] }
-    }
-    async function probeSeq(){
-      const bases = Array.from({length:120},(_,i)=>`./img${i+1}`);
-      const exts  = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.webm'];
-      const found = new Set();
-      await Promise.all(
-        bases.flatMap(base => exts.map(ext => new Promise(res=>{
-          const isVid = ['.mp4','.webm'].includes(ext);
-          if(isVid){ fetch(base+ext,{method:'HEAD'}).then(h=>{ if(h.ok) found.add(base+ext); res(); }).catch(()=>res()); }
-          else { const im=new Image(); im.onload=()=>{found.add(base+ext);res()}; im.onerror=()=>res(); im.src=base+ext; }
-        })))
-      );
-      return Array.from(found);
+      try {
+        const d = JSON.parse(el.textContent||'{}');
+        return Array.isArray(d.images)
+          ? d.images.map(u => u.startsWith('http') ? u : new URL(u, location.href).href)
+          : [];
+      } catch { return []; }
     }
 
     let sources = fromInline();
-    if(!sources.length) sources = await fromFile();
-    if(!sources.length) sources = await probeSeq();
-    if(!sources.length){ track.innerHTML = '<div class="text-center text-blume-sub py-6">No artworks found.</div>'; return; }
+    if(!sources.length){
+      track.innerHTML = '<div class="text-center text-blume-sub py-6">No artworks found.</div>';
+      return;
+    }
 
     function buildTile(src,i,w=1,h=1){
       const a = document.createElement('a');
+      // Single encode here; router will decode once.
       a.href = `?art=${encodeURIComponent(src)}`;
       a.className='tile group';
-      a.style.gridColumn = `span ${w}`; a.style.gridRow = `span ${Math.min(h,2)}`;
+      a.style.gridColumn = `span ${w}`;
+      a.style.gridRow    = `span ${Math.min(h,2)}`;
+
       const isVid = VIDEO_EXTS.has(extOf(src));
       a.innerHTML = isVid
-        ? `<video autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class=\"absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent\"></div>`
-        : `<img loading=\"lazy\" src=\"${src}\" alt=\"Artwork ${i+1}\"><div class=\"absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent\"></div>`;
+        ? `<video autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
+        : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
       return a;
     }
 
+    // packer
     const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
     const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
     function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
@@ -401,76 +358,51 @@
 
     const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
     function push(w,h,b=false){ const src=sources[si++%sources.length]; seq.push({src,span:[w,h],col,b}); }
-    while(seq.length<target){ let hole=nextHole(); if(hole!==-1){ col=hole; if(canPlace(col,1,1)){ occupy(col,1,1,true); push(1,1,true); continue; } }
-      const [w,h]=recipe[ri++%recipe.length]; while(!canPlace(col,w,h)){ hole=nextHole(); if(hole!==-1){ col=hole; occupy(col,1,1,true); push(1,1,true); } else { ensureCol(col); if(cols[col].top&&!cols[col].bottom){ occupy(col,1,1,true); push(1,1,true); } else col+=1; } }
-      occupy(col,w,h,false); push(w,h,false); col+=w; }
+    while(seq.length<target){
+      let hole=nextHole();
+      if(hole!==-1){ col=hole; if(canPlace(col,1,1)){ occupy(col,1,1,true); push(1,1,true); continue; } }
+      const [w,h]=recipe[ri++%recipe.length];
+      while(!canPlace(col,w,h)){
+        hole=nextHole();
+        if(hole!==-1){ col=hole; occupy(col,1,1,true); push(1,1,true); }
+        else { ensureCol(col); if(cols[col].top&&!cols[col].bottom){ occupy(col,1,1,true); push(1,1,true); } else col+=1; }
+      }
+      occupy(col,w,h,false); push(w,h,false); col+=w;
+    }
 
-    const trackEl=track; trackEl.innerHTML='';
+    // Render + duplicate for seamless loop
+    track.innerHTML='';
     const set1=seq.map((t,i)=>buildTile(t.src,i,t.span[0],t.span[1]));
     const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1]));
-    set1.concat(set2).forEach(el=>trackEl.appendChild(el));
-    requestAnimationFrame(()=>{ const gap=parseFloat(getComputedStyle(trackEl).gap||'0'); const width=set1.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0); trackEl.style.setProperty('--loop',`${width}px`); const speed=Math.max(35,Math.min(250,Math.round(width/75))); trackEl.style.setProperty('--duration',`${speed}s`); trackEl.classList.add('run'); });
+    set1.concat(set2).forEach(el=>track.appendChild(el));
 
-    const track3=document.getElementById('puzzleTrack3'); if(track3){ const recipe1=[1,1,2,1,2,1,1,2,1,1,2,1]; const seq3=[]; const base=Math.max(sources.length,12); for(let i=0;i<base;i++){ const src=sources[i%sources.length]; const w=recipe1[i%recipe1.length]; seq3.push({src,w}); } track3.innerHTML=''; const setA=seq3.map((t,i)=>buildTile(t.src,i,t.w,1)); const setB=seq3.map((t,i)=>buildTile(t.src,i+setA.length,t.w,1)); setA.concat(setB).forEach(el=>track3.appendChild(el)); requestAnimationFrame(()=>{ const gap=parseFloat(getComputedStyle(track3).gap||'0'); const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0); track3.style.setProperty('--loop',`${width}px`); const speed=Math.max(35,Math.min(250,Math.round(width/75))); track3.style.setProperty('--duration',`${speed}s`); track3.classList.add('run','reverse'); }); }
-  })();
-
-  // --- Contact form handler (POST to /api/contact) ---
-  (function(){
-    const form=document.getElementById('contactForm');
-    const btn=document.getElementById('contactSubmit');
-    const msg=document.getElementById('contactMsg');
-    if(!form) return;
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      msg.textContent=''; msg.className='sm:col-span-2 text-sm mt-1';
-      btn.disabled=true; btn.style.opacity=0.7;
-      const data=Object.fromEntries(new FormData(form).entries());
-      try{
-        const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-        const out=await res.json();
-        if(out.ok){ msg.textContent='Thanks — we\'ll get back to you shortly.'; msg.classList.add('text-green-400'); form.reset(); }
-        else{ msg.textContent='Error: '+(out.error||'Email send failed'); msg.classList.add('text-red-400'); }
-      }catch(err){ msg.textContent='Network error. Please try again.'; msg.classList.add('text-red-400'); }
-      finally{ btn.disabled=false; btn.style.opacity=1; }
-    });
-  })();
-
-  // --- Preloader logic (non-destructive) ---
-  (function(){
-    const pre = document.getElementById('preloader');
-    if(!pre) return;
-    const MIN_SHOW_MS = 600;      // avoid flicker
-    const MAX_WAIT_MS = 6500;     // safety cap
-    const start = performance.now();
-
-    function hide(){
-      const dt = performance.now() - start;
-      const wait = Math.max(0, MIN_SHOW_MS - dt);
-      setTimeout(()=>{
-        document.body.classList.add('ready');
-        pre.classList.add('hidden');
-        setTimeout(()=> pre.remove(), 800);
-      }, wait);
-    }
-
-    // Prefer hero readiness + window load
-    const heroVid = document.querySelector('section#top video');
-    let heroReady = !heroVid; // if no video, proceed
-    if(heroVid){
-      if(heroVid.readyState >= 2) heroReady = true; // HAVE_CURRENT_DATA
-      else heroVid.addEventListener('loadeddata', ()=>{ heroReady = true; }, { once:true });
-    }
-
-    const onLoad = new Promise(res => {
-      if (document.readyState === 'complete') res();
-      else window.addEventListener('load', res, { once:true });
+    requestAnimationFrame(()=>{
+      const gap=parseFloat(getComputedStyle(track).gap||'0');
+      const width=set1.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+      track.style.setProperty('--loop',`${width}px`);
+      const speed=Math.max(35,Math.min(250,Math.round(width/75)));
+      track.style.setProperty('--duration',`${speed}s`);
+      track.classList.add('run');
     });
 
-    const onTimeout = new Promise(res => setTimeout(res, MAX_WAIT_MS));
-
-    Promise.race([Promise.all([onLoad]).then(()=>heroReady?undefined:new Promise(r=>{
-      const chk = setInterval(()=>{ if(heroReady){ clearInterval(chk); r(); } }, 60); })), onTimeout])
-      .then(hide);
+    // third row
+    const track3=document.getElementById('puzzleTrack3');
+    if(track3){
+      const recipe1=[1,1,2,1,2,1,1,2,1,1,2,1];
+      const seq3=[]; const base=Math.max(sources.length,12);
+      for(let i=0;i<base;i++){ const src=sources[i%sources.length]; const w=recipe1[i%recipe1.length]; seq3.push({src,w}); }
+      const setA=seq3.map((t,i)=>buildTile(t.src,i,t.w,1));
+      const setB=seq3.map((t,i)=>buildTile(t.src,i+setA.length,t.w,1));
+      track3.innerHTML=''; setA.concat(setB).forEach(el=>track3.appendChild(el));
+      requestAnimationFrame(()=>{
+        const gap=parseFloat(getComputedStyle(track3).gap||'0');
+        const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+        track3.style.setProperty('--loop',`${width}px`);
+        const speed=Math.max(35,Math.min(250,Math.round(width/75)));
+        track3.style.setProperty('--duration',`${speed}s`);
+        track3.classList.add('run','reverse');
+      });
+    }
   })();
   </script>
 </body>
