@@ -305,21 +305,21 @@
                   <p class="text-blume-sub mt-2">${data.description}</p>
                 </div>
                 <div class="space-y-3 text-sm text-blume-sub">
-  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-    <div class="text-white font-semibold">Role</div>
-    <div>${data.roles.join(", ")}</div>
-  </div>
-  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-    <div class="text-white font-semibold">Year</div>
-    <div>${data.year}</div>
-  </div>
-  ${data.link ? `
-    <a href="${data.link}" target="_blank" rel="noopener"
-       class="block text-center px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">
-       Visit Project
-    </a>
-  ` : ""}
-</div>
+                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div class="text-white font-semibold">Role</div>
+                  <div>${data.roles.join(", ")}</div>
+                </div>
+                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div class="text-white font-semibold">Year</div>
+                  <div>${data.year}</div>
+                </div>
+                ${data.link ? `
+                  <a href="${data.link}" target="_blank" rel="noopener"
+                     class="block text-center px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">
+                     Visit Project
+                  </a>
+                ` : ""}
+              </div>
 
               </div>
 
