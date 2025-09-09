@@ -1,0 +1,15 @@
+{
+  "title": "Project C",
+  "year": 2025,
+  "roles": [
+    "Direction",
+    "3D",
+    "Edit"
+  ],
+  "description": "Placeholder description for Project C.",
+  "cover": "cover.mp4",
+  "assets": [
+    "shot1.gif"
+  ],
+  "link": "#"
+}

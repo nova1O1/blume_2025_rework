@@ -1,0 +1,17 @@
+{
+  "title": "Project E",
+  "year": 2025,
+  "roles": [
+    "Direction",
+    "3D",
+    "Edit"
+  ],
+  "description": "Placeholder description for Project E.",
+  "cover": "cover.mp4",
+  "assets": [
+    "shot1.png",
+    "shot2.png",
+    "shot3.png"
+  ],
+  "link": "#"
+}
