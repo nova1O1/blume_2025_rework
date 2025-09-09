@@ -303,13 +303,15 @@
                 </div>
               </div>
 
-              <div class="mt-10 grid md:grid-cols-3 gap-4">
-                ${data.assets.map(a => `
-                  <div class="rounded-xl overflow-hidden border border-white/10 bg-white/5">
-                    <div class="relative aspect-[16/9]">${renderAsset(folder + a)}</div>
+              div class="mt-10 space-y-10">
+              ${data.assets.map(a => `
+                <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                  <div class="relative aspect-[16/9] md:aspect-[21/9]">
+                    ${renderAsset(folder + a)}
                   </div>
-                `).join("")}
-              </div>
+                </div>
+              `).join("")}
+            </div>
             </section>
           </main>
         `;
