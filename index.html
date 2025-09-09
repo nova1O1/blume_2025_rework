@@ -256,7 +256,10 @@
       a.innerHTML=isVid
         ? `<video autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
         : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
-      a.addEventListener("click", e=>{ e.preventDefault(); navigateToProject(folder); });
+      a.addEventListener("click", e=>{
+  e.preventDefault();
+  navigateToProject(folder);
+});
       return a;
     }
 
