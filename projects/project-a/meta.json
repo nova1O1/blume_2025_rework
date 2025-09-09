@@ -1,11 +1,15 @@
 {
   "title": "Cinematic Drop",
   "year": 2025,
-  "roles": ["Direction", "3D", "Edit"],
+  "roles": [
+    "Direction", 
+    "3D", 
+    "Edit"
+  ],
   "description": "A cinematic exploration mixing motion and code-driven worlds.",
   "cover": "cover.mp4",
   "assets": [
-    "shot1.gif"
-    
-  ]
+    "sho1.gif"
+  ],
+  "link": "https://your-project-link.com"
 }
