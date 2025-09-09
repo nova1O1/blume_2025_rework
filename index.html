@@ -66,7 +66,7 @@
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
   </style>
 </head>
-<body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black">
+<body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black" style="background:linear-gradient(to bottom,#1C1C1C 0%,#0A0A0A 100%);">
 
   <!-- NAV -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
@@ -136,9 +136,109 @@
     </div>
   </section>
 
-  <!-- (rest of About, Services, Process, Contact, Footer same as before)… -->
+  <!-- SERVICES -->
+  <section id="services" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40/">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-3xl md:text-5xl font-bold">What We Do</h2>
+          <p class="mt-3 text-blume-sub max-w-2xl">Motion-first studio blending 3D, design and code. Branding and interactive support the cinematic core.</p>
+        </div>
+      </div>
+      <div class="mt-10 grid md:grid-cols-3 gap-6">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="text-xl font-semibold">Motion & 3D</h3>
+          <p class="text-blume-sub mt-2">Promos, visualizers, show opens, music content, CG worlds, look-dev & simulations.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="text-xl font-semibold">Branding & Identity</h3>
+          <p class="text-blume-sub mt-2">Logo systems, type, art direction and brand worlds that extend into motion.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 class="text-xl font-semibold">Digital & Interactive</h3>
+          <p class="text-blume-sub mt-2">Sites and microsites that turn visuals into living experiences.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- Inline manifest (projects list) -->
+  <!-- PROCESS -->
+  <section id="process" class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-5xl font-bold">How We Work</h2>
+      <div class="mt-10 grid md:grid-cols-3 gap-6 text-blume-sub">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm uppercase tracking-widest text-blume-accent">01</div>
+          <h3 class="text-xl font-semibold text-white mt-2">Kickoff & Story</h3>
+          <p class="mt-2">Goals, audience and the visual north star. We define impact, tone, and references.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm uppercase tracking-widest text-blume-accent">02</div>
+          <h3 class="text-xl font-semibold text-white mt-2">R&amp;D & Look Dev</h3>
+          <p class="mt-2">Styleframes, shaders, simulations and tests to find the most cinematic language.</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm uppercase tracking-widest text-blume-accent">03</div>
+          <h3 class="text-xl font-semibold text-white mt-2">Build & Deliver</h3>
+          <p class="mt-2">Production, edit & sound. We package assets for launch across platforms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12 items-start">
+        <div>
+          <h2 class="text-3xl md:text-5xl font-bold">About Blume</h2>
+          <p class="mt-4 text-blume-sub max-w-2xl">Blume is a studio of visual artists and programmers. We mix craft and code to create work that feels alive—across music, culture, esports and digital-first brands.</p>
+          <div class="mt-6 grid grid-cols-3 gap-4 text-sm text-blume-sub">
+            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">3+</div><div>Core disciplines</div></div>
+            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">1000+</div><div>Projects shipped</div></div>
+            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">∞</div><div>Ideas brewing</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-16 md:py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold">Let’s build something wild</h2>
+      <p class="mt-4 text-blume-sub">Whether it’s a music video, a brand world, or an experiment — we’re here to make visuals that move people.</p>
+      <div class="mt-8">
+        <form class="grid sm:grid-cols-2 gap-3 text-left" onsubmit="event.preventDefault(); alert('Thanks! We\'ll be in touch.');">
+          <input type="text" placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
+          <input type="text" placeholder="Project/Company" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
+          <textarea placeholder="Tell us about your idea…" rows="5" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2"></textarea>
+          <button type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</button>
+        </form>
+        <div class="mt-6 text-sm text-blume-sub">Prefer email? <a class="underline hover:text-white" href="mailto:hello@blume-visuals.com">hello@blume-visuals.com</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-white/5 text-sm text-blume-sub">
+    <div class="w-full px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <a href="#top" class="inline-flex items-center">
+          <img src="https://blume-visuals.com/assets/images/logo.png" alt="Blume Logo" class="h-12 w-auto">
+        </a>
+        <span>© <span id="year"></span> Blume Studio</span>
+      </div>
+      <div class="flex items-center gap-5">
+        <a class="hover:text-white" href="#">Instagram</a>
+        <a class="hover:text-white" href="#">Behance</a>
+        <a class="hover:text-white" href="#">YouTube</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inline manifest (project folders) -->
   <script id="artworks-data" type="application/json">
   {
     "projects": [
@@ -153,123 +253,153 @@
   const btn = document.getElementById('menuBtn');
   const menu = document.getElementById('mobileMenu');
   btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
-  document.getElementById('year')?.textContent = new Date().getFullYear();
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  function extOf(u){ const m=(u.split('?')[0].match(/\.([a-zA-Z0-9]+)$/)||[])[1]; return (m||'').toLowerCase(); }
+  // Helpers
+  function extOf(u){ const m = (u.split('?')[0].match(/\.([a-zA-Z0-9]+)$/)||[])[1]; return (m||'').toLowerCase(); }
   const IMAGE_EXTS = new Set(['jpg','jpeg','png','gif','webp']);
   const VIDEO_EXTS = new Set(['mp4','webm','mov']);
 
   /* =========================
-     Client-side Router
+     Project Detail Router
   ==========================*/
-  async function loadProject(folder, push=true){
-    try {
-      const res = await fetch(`${folder}/meta.json`);
-      if(!res.ok) throw new Error("meta.json not found");
-      const data = await res.json();
+  (function detailRouter(){
+    const params = new URLSearchParams(location.search);
+    const art = params.get('art');
+    if(!art) return;
 
-      if(push) history.pushState({art:folder}, "", `?art=${encodeURIComponent(folder)}`);
+    async function loadProject(folder){
+      try {
+        const res = await fetch(`${folder}/meta.json`);
+        if(!res.ok) throw new Error("meta.json not found");
+        const data = await res.json();
 
-      document.body.innerHTML = `
-        <main class="min-h-screen detail-bg">
-          <header class="sticky top-0 z-50 backdrop-blur border-b border-white/5">
-            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-              <a href="/" class="flex items-center gap-3"><img src="https://blume-visuals.com/assets/images/logo.png" class="h-10" alt="Blume"></a>
-              <a href="/" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10">Back</a>
-            </div>
-          </header>
-
-          <section class="detail-enter max-w-6xl mx-auto px-4 py-10">
-            <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
-              <div class="relative aspect-[21/9]">${renderAsset(folder + data.cover)}</div>
-            </div>
-
-            <div class="mt-6 grid md:grid-cols-3 gap-6">
-              <div class="md:col-span-2">
-                <h1 class="text-3xl font-bold">${data.title}</h1>
-                <p class="text-blume-sub mt-2">${data.description}</p>
+        document.body.innerHTML = `
+          <main class="min-h-screen detail-bg">
+            <header class="sticky top-0 z-50 backdrop-blur border-b border-white/5">
+              <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-3">
+                  <img src="https://blume-visuals.com/assets/images/logo.png" class="h-10" alt="Blume">
+                </a>
+                <a href="/" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10">Back</a>
               </div>
-              <div class="space-y-3 text-sm text-blume-sub">
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4"><div class="text-white font-semibold">Role</div><div>${data.roles.join(", ")}</div></div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4"><div class="text-white font-semibold">Year</div><div>${data.year}</div></div>
-                ${data.link ? `<a href="${data.link}" target="_blank" rel="noopener" class="block text-center px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Visit Project</a>` : ""}
-              </div>
-            </div>
+            </header>
 
-            <div class="mt-10 space-y-10">
+            <section class="detail-enter max-w-6xl mx-auto px-4 py-10">
+              <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                <div class="relative aspect-[16/9] md:aspect-[21/9]">
+                  ${renderAsset(folder + data.cover)}
+                </div>
+              </div>
+
+              <div class="mt-6 grid md:grid-cols-3 gap-6">
+                <div class="md:col-span-2">
+                  <h1 class="text-3xl font-bold">${data.title}</h1>
+                  <p class="text-blume-sub mt-2">${data.description}</p>
+                </div>
+                <div class="space-y-3 text-sm text-blume-sub">
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+    <div class="text-white font-semibold">Role</div>
+    <div>${data.roles.join(", ")}</div>
+  </div>
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+    <div class="text-white font-semibold">Year</div>
+    <div>${data.year}</div>
+  </div>
+  ${data.link ? `
+    <a href="${data.link}" target="_blank" rel="noopener"
+       class="block text-center px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">
+       Visit Project
+    </a>
+  ` : ""}
+</div>
+
+              </div>
+
+              <div class="mt-10 space-y-10">
               ${data.assets.map(a => `
                 <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
-                  <div class="relative aspect-[16/9]">${renderAsset(folder + a)}</div>
+                  <div class="relative aspect-[16/9] md:aspect-[21/9]">
+                    ${renderAsset(folder + a)}
+                  </div>
                 </div>
               `).join("")}
             </div>
-          </section>
-        </main>
-      `;
-    } catch(e){ console.error("Failed to load project", e); }
-  }
-
-  function renderAsset(src){
-    const ext = extOf(src);
-    if(VIDEO_EXTS.has(ext)){
-      return `<video src="${src}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover"></video>`;
-    } else {
-      return `<img src="${src}" alt="Asset" class="absolute inset-0 w-full h-full object-cover"/>`;
+            </section>
+          </main>
+        `;
+      } catch(e){
+        console.error("Failed to load project", e);
+      }
     }
-  }
 
-  function navigateToProject(folder){ loadProject(folder,true); }
+    function renderAsset(src){
+      const ext = extOf(src);
+      if(VIDEO_EXTS.has(ext)){
+        return `<video src="${src}" autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover"></video>`;
+      } else {
+        return `<img src="${src}" alt="Asset" class="absolute inset-0 w-full h-full object-cover"/>`;
+      }
+    }
 
-  window.addEventListener("popstate", e=>{
-    if(e.state?.art){ loadProject(e.state.art,false); }
-    else location.reload();
-  });
+    if(art.endsWith("/")) loadProject(art);
+  })();
 
   /* =========================
      Puzzle River Loader
   ==========================*/
   (async function loadBlumePuzzle(){
-    const track=document.getElementById('puzzleTrack');
-    if(!track) return;
+    const track = document.getElementById('puzzleTrack');
+    if(!track) return; // We're in detail mode
 
     function fromInline(){
-      const el=document.getElementById('artworks-data');
-      try{ const d=JSON.parse(el.textContent||'{}'); return d.projects||[]; }catch{return[];}
+      const el = document.getElementById('artworks-data'); if(!el) return [];
+      try {
+        const d = JSON.parse(el.textContent||'{}');
+        return Array.isArray(d.projects)
+          ? d.projects.map(u => u.startsWith('http') ? u : new URL(u, location.href).href)
+          : [];
+      } catch { return []; }
     }
 
-    let projects=fromInline();
-    if(!projects.length){ track.innerHTML='<div class="text-center text-blume-sub py-6">No projects found.</div>'; return; }
+    let projects = fromInline();
+    if(!projects.length){
+      track.innerHTML = '<div class="text-center text-blume-sub py-6">No projects found.</div>';
+      return;
+    }
 
     async function getCover(folder){
-      try{ const res=await fetch(`${folder}/meta.json`); if(!res.ok) return null; const d=await res.json(); return {cover:folder+d.cover,folder}; }catch{return null;}
+      try {
+        const res = await fetch(`${folder}/meta.json`);
+        if(!res.ok) return null;
+        const data = await res.json();
+        return folder + data.cover;
+      } catch { return null; }
     }
 
-    const covers=(await Promise.all(projects.map(getCover))).filter(Boolean);
+    const sources = (await Promise.all(projects.map(getCover))).filter(Boolean);
 
-    function buildTile(src,i,w=1,h=1,folder){
-      const a=document.createElement('a');
-      a.href=`?art=${encodeURIComponent(folder)}`;
+    function buildTile(src,i,w=1,h=1,link){
+      const a = document.createElement('a');
+      a.href = `?art=${encodeURIComponent(link)}`;
       a.className='tile group';
-      a.style.gridColumn=`span ${w}`;
-      a.style.gridRow=`span ${Math.min(h,2)}`;
-      const isVid=VIDEO_EXTS.has(extOf(src));
-      a.innerHTML=isVid
+      a.style.gridColumn = `span ${w}`;
+      a.style.gridRow    = `span ${Math.min(h,2)}`;
+
+      const isVid = VIDEO_EXTS.has(extOf(src));
+      a.innerHTML = isVid
         ? `<video autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
         : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
-      a.addEventListener("click", e=>{
-  e.preventDefault();
-  navigateToProject(folder);
-});
       return a;
     }
 
-    const recipe=[[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
-    const seq=[]; let si=0,col=0; const target=Math.max(covers.length,12); let ri=0;
+    const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
+    const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
     const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
     function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
     function occupy(col,w,h,bottom=false){ for(let c=col;c<col+w;c++){ if(h===2){ cols[c].top=true; cols[c].bottom=true; } else { if(bottom) cols[c].bottom=true; else cols[c].top=true; } } }
     function nextHole(){ for(let i=0;i<cols.length;i++){ if(cols[i].top&&!cols[i].bottom) return i; } return -1; }
-    function push(w,h,b=false){ const {cover,folder}=covers[si%covers.length]; si++; seq.push({src:cover,span:[w,h],col,b,folder}); }
+    function push(w,h,b=false){ const src=sources[si%sources.length]; const link=projects[si%projects.length]; si++; seq.push({src,span:[w,h],col,b,link}); }
 
     while(seq.length<target){
       let hole=nextHole();
@@ -284,8 +414,8 @@
     }
 
     track.innerHTML='';
-    const set1=seq.map((t,i)=>buildTile(t.src,i,t.span[0],t.span[1],t.folder));
-    const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1],t.folder));
+    const set1=seq.map((t,i)=>buildTile(t.src,i,t.span[0],t.span[1],t.link));
+    const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1],t.link));
     set1.concat(set2).forEach(el=>track.appendChild(el));
 
     requestAnimationFrame(()=>{
@@ -296,6 +426,25 @@
       track.style.setProperty('--duration',`${speed}s`);
       track.classList.add('run');
     });
+
+    // third row
+    const track3=document.getElementById('puzzleTrack3');
+    if(track3){
+      const recipe1=[1,1,2,1,2,1,1,2,1,1,2,1];
+      const seq3=[]; const base=Math.max(sources.length,12);
+      for(let i=0;i<base;i++){ const src=sources[i%sources.length]; const link=projects[i%projects.length]; const w=recipe1[i%recipe1.length]; seq3.push({src,w,link}); }
+      const setA=seq3.map((t,i)=>buildTile(t.src,i,t.w,1,t.link));
+      const setB=seq3.map((t,i)=>buildTile(t.src,i+setA.length,t.w,1,t.link));
+      track3.innerHTML=''; setA.concat(setB).forEach(el=>track3.appendChild(el));
+      requestAnimationFrame(()=>{
+        const gap=parseFloat(getComputedStyle(track3).gap||'0');
+        const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+        track3.style.setProperty('--loop',`${width}px`);
+        const speed=Math.max(35,Math.min(250,Math.round(width/75)));
+        track3.style.setProperty('--duration',`${speed}s`);
+        track3.classList.add('run','reverse');
+      });
+    }
   })();
   </script>
 </body>
