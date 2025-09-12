@@ -162,52 +162,52 @@
     </div>
   </section>
   <style type="text/css">
-      /* === Redesigned Logo Marquee === */
-.logo-marquee {
-  --gap: 4rem;         /* space between logos */
-  --row-h: 110px;      /* band height */
-  --duration: 45s;     /* scroll speed */
-  position: relative;
-  overflow: hidden;
-  padding: 1.25rem 0;
-}
+              /* === Redesigned Logo Marquee === */
+        .logo-marquee {
+          --gap: 4rem;         /* space between logos */
+          --row-h: 110px;      /* band height */
+          --duration: 45s;     /* scroll speed */
+          position: relative;
+          overflow: hidden;
+          padding: 1.25rem 0;
+        }
 
-.logo-track {
-  display: flex;
-  align-items: center;
-  gap: var(--gap);
-  height: var(--row-h);
-  animation: logo-scroll var(--duration) linear infinite;
-  transform: translateX(0); /* start from left */
-  will-change: transform;
-}
+        .logo-track {
+          display: flex;
+          align-items: center;
+          gap: var(--gap);
+          height: var(--row-h);
+          animation: logo-scroll var(--duration) linear infinite;
+          transform: translateX(0); /* start from left */
+          will-change: transform;
+        }
 
-.logo-item {
-  display: block;
-  width: auto;          /* preserve aspect */
-  height: auto;         /* preserve aspect */
-  max-height: 90px;     /* control visual size */
-  filter: brightness(0) invert(1);  /* make white */
-  opacity: .9;
-  transition: opacity .2s ease, transform .2s ease;
-}
+        .logo-item {
+          display: block;
+          width: auto;          /* preserve aspect */
+          height: auto;         /* preserve aspect */
+          max-height: 90px;     /* control visual size */
+          filter: brightness(0) invert(1);  /* make white */
+          opacity: .9;
+          transition: opacity .2s ease, transform .2s ease;
+        }
 
-/* Optional per-brand fine-tuning so visual weight matches */
-.logo-item[data-scale="sm"] { transform: scale(.85); }
-.logo-item[data-scale="md"] { transform: scale(1);   }
-.logo-item[data-scale="lg"] { transform: scale(1.15);}
+        /* Optional per-brand fine-tuning so visual weight matches */
+        .logo-item[data-scale="sm"] { transform: scale(.85); }
+        .logo-item[data-scale="md"] { transform: scale(1);   }
+        .logo-item[data-scale="lg"] { transform: scale(1.15);}
 
-.logo-item:hover { opacity: 1; transform: translateY(-2px); }
+        .logo-item:hover { transition-duration: 5; opacity: 1; }
 
-@keyframes logo-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(calc(-50% - var(--gap)/2)); }
-}
+        @keyframes logo-scroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(calc(-50% - var(--gap)/2)); }
+        }
 
-@media (max-width: 768px){
-  .logo-marquee { --gap: 2rem; --row-h: 72px; --duration: 38s; }
-  .logo-item    { max-height: 58px; }
-}
+        @media (max-width: 768px){
+          .logo-marquee { --gap: 2rem; --row-h: 72px; --duration: 38s; }
+          .logo-item    { max-height: 58px; }
+        }
 
 
   </style>
@@ -284,7 +284,7 @@
 
   // Pause on hover; respect reduced motion
   const container = el.closest('.logo-marquee');
-  container.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
+  //container.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
   container.addEventListener('mouseleave', () => { el.style.animationPlayState = 'running'; });
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     el.style.animation = 'none';
