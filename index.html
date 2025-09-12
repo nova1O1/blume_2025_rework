@@ -66,7 +66,7 @@
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
   </style>
 </head>
-<body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black" style="background:linear-gradient(to bottom,#1C1C1C 0%,#0A0A0A 100%);">
+<body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black">
 
   <!-- NAV -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
@@ -161,6 +161,139 @@
       </div>
     </div>
   </section>
+  <style type="text/css">
+      /* === Redesigned Logo Marquee === */
+.logo-marquee {
+  --gap: 4rem;         /* space between logos */
+  --row-h: 110px;      /* band height */
+  --duration: 45s;     /* scroll speed */
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem 0;
+}
+
+.logo-track {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  height: var(--row-h);
+  animation: logo-scroll var(--duration) linear infinite;
+  transform: translateX(0); /* start from left */
+  will-change: transform;
+}
+
+.logo-item {
+  display: block;
+  width: auto;          /* preserve aspect */
+  height: auto;         /* preserve aspect */
+  max-height: 90px;     /* control visual size */
+  filter: brightness(0) invert(1);  /* make white */
+  opacity: .9;
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+/* Optional per-brand fine-tuning so visual weight matches */
+.logo-item[data-scale="sm"] { transform: scale(.85); }
+.logo-item[data-scale="md"] { transform: scale(1);   }
+.logo-item[data-scale="lg"] { transform: scale(1.15);}
+
+.logo-item:hover { opacity: 1; transform: translateY(-2px); }
+
+@keyframes logo-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - var(--gap)/2)); }
+}
+
+@media (max-width: 768px){
+  .logo-marquee { --gap: 2rem; --row-h: 72px; --duration: 38s; }
+  .logo-item    { max-height: 58px; }
+}
+
+
+  </style>
+
+
+  <!-- CLIENTS -->
+<section id="clients" class="py-12 md:py-16 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-6">
+      <h2 class="text-3xl md:text-5xl font-bold">Brands we’ve worked with</h2>
+    </div>
+  </div>
+
+  <!-- full-width marquee (edge-to-edge) -->
+  <div class="mt-8 w-full">
+    <div class="logo-marquee relative">
+      <div class="logo-track will-change-transform" id="logoTrack"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* =========================
+   Clients / Logos Marquee
+   (keep rest of the page unchanged)
+=========================*/
+(function initClients(){
+  const el = document.getElementById('logoTrack');
+  if (!el) return;
+
+  // Keep using hosted SVGs (you can swap to local files anytime)
+  // Add an optional 'scale' to balance visual weight across brands
+  const logos = [
+    { title:'Riot Games', href:'https://www.riotgames.com/',
+      src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
+    { title:'League of Legends', href:'https://www.leagueoflegends.com/',
+      src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
+    { title:'VALORANT', href:'https://playvalorant.com/',
+      src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
+    { title:'Honda', href:'https://www.honda.com/',
+      src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
+    { title:'Apple', href:'https://www.apple.com/',
+      src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
+    { title:'Universal Music Group', href:'https://www.universalmusic.com/',
+      src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' }
+  ];
+
+  function buildRow() {
+    const frag = document.createDocumentFragment();
+    logos.forEach(l => {
+      const a = document.createElement('a');
+      a.href = l.href; a.target = '_blank'; a.rel = 'noopener';
+      a.className = 'h-full flex items-center';
+
+      const img = document.createElement('img');
+      img.src = l.src;
+      img.alt = l.title + ' logo';
+      img.className = 'logo-item';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      // IMPORTANT: DO NOT set img.height or img.width attributes
+      if (l.scale) img.setAttribute('data-scale', l.scale);
+
+      a.appendChild(img);
+      frag.appendChild(a);
+    });
+    return frag;
+  }
+
+  // Build two copies for seamless loop
+  el.innerHTML = '';
+  el.appendChild(buildRow());
+  el.appendChild(buildRow());
+
+  // Pause on hover; respect reduced motion
+  const container = el.closest('.logo-marquee');
+  container.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
+  container.addEventListener('mouseleave', () => { el.style.animationPlayState = 'running'; });
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.style.animation = 'none';
+  }
+})();
+</script>
+
+
+    
 
   <!-- PROCESS -->
   <section id="process" class="py-16 md:py-24">
@@ -238,7 +371,7 @@
     </div>
   </footer>
 
-  <!-- Inline manifest (project folders) -->
+  <!-- Inline manifest -->
   <script id="artworks-data" type="application/json">
   {
     "projects": [
@@ -247,10 +380,7 @@
       "./projects/project-c/",
       "./projects/project-d/",
       "./projects/project-e/",
-      "./projects/project-f/",
-      "./projects/project-g/"
-      
-
+      "./projects/project-f/"
     ]
   }
   </script>
@@ -262,7 +392,6 @@
   btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Helpers
   function extOf(u){ const m = (u.split('?')[0].match(/\.([a-zA-Z0-9]+)$/)||[])[1]; return (m||'').toLowerCase(); }
   const IMAGE_EXTS = new Set(['jpg','jpeg','png','gif','webp']);
   const VIDEO_EXTS = new Set(['mp4','webm','mov']);
@@ -305,39 +434,35 @@
                   <p class="text-blume-sub mt-2">${data.description}</p>
                 </div>
                 <div class="space-y-3 text-sm text-blume-sub">
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div class="text-white font-semibold">Role</div>
-                  <div>${data.roles.join(", ")}</div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="text-white font-semibold">Role</div>
+                    <div>${data.roles.join(", ")}</div>
+                  </div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="text-white font-semibold">Year</div>
+                    <div>${data.year}</div>
+                  </div>
+                  ${data.link ? `
+                    <a href="${data.link}" target="_blank" rel="noopener"
+                      class="block text-center px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">
+                      Visit Project
+                    </a>` : ""}
                 </div>
-                <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div class="text-white font-semibold">Year</div>
-                  <div>${data.year}</div>
-                </div>
-                ${data.link ? `
-                  <a href="${data.link}" target="_blank" rel="noopener"
-                     class="block text-center px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">
-                     Visit Project
-                  </a>
-                ` : ""}
-              </div>
-
               </div>
 
               <div class="mt-10 space-y-10">
-              ${data.assets.map(a => `
-                <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
-                  <div class="relative aspect-[16/9] md:aspect-[21/9]">
-                    ${renderAsset(folder + a)}
+                ${data.assets.map(a => `
+                  <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                    <div class="relative aspect-[16/9] md:aspect-[21/9]">
+                      ${renderAsset(folder + a)}
+                    </div>
                   </div>
-                </div>
-              `).join("")}
-            </div>
+                `).join("")}
+              </div>
             </section>
           </main>
         `;
-      } catch(e){
-        console.error("Failed to load project", e);
-      }
+      } catch(e){ console.error("Failed to load project", e); }
     }
 
     function renderAsset(src){
@@ -353,20 +478,16 @@
   })();
 
   /* =========================
-     Puzzle River Loader
+     Puzzle River Loader + Video Culling
   ==========================*/
   (async function loadBlumePuzzle(){
     const track = document.getElementById('puzzleTrack');
-    if(!track) return; // We're in detail mode
+    if(!track) return; // we're in detail mode
 
     function fromInline(){
-      const el = document.getElementById('artworks-data'); if(!el) return [];
-      try {
-        const d = JSON.parse(el.textContent||'{}');
-        return Array.isArray(d.projects)
-          ? d.projects.map(u => u.startsWith('http') ? u : new URL(u, location.href).href)
-          : [];
-      } catch { return []; }
+      const el = document.getElementById('artworks-data');
+      try{ const d = JSON.parse(el.textContent||'{}'); return d.projects||[]; }
+      catch{ return []; }
     }
 
     let projects = fromInline();
@@ -400,7 +521,7 @@
       return a;
     }
 
-    const recipe = [[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
+    const recipe=[[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
     const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
     const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
     function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
@@ -452,6 +573,17 @@
         track3.classList.add('run','reverse');
       });
     }
+
+    // ✅ IntersectionObserver to pause off-screen videos
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        const v=entry.target;
+        if(entry.isIntersecting){ v.play().catch(()=>{}); }
+        else{ v.pause(); }
+      });
+    },{threshold:0.25});
+
+    document.querySelectorAll('.tile video').forEach(v=>observer.observe(v));
   })();
   </script>
 </body>
