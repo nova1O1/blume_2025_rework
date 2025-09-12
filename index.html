@@ -201,8 +201,9 @@
 
         @keyframes logo-scroll {
           from { transform: translateX(0); }
-          to   { transform: translateX(calc(-50% - var(--gap)/2)); }
+          to   { transform: translateX(calc(-1 * var(--loop, 0px))); }
         }
+
 
         @media (max-width: 768px){
           .logo-marquee { --gap: 2rem; --row-h: 72px; --duration: 38s; }
@@ -230,37 +231,27 @@
 </section>
 
 <script>
-/* =========================
-   Clients / Logos Marquee
-   (keep rest of the page unchanged)
-=========================*/
 (function initClients(){
   const el = document.getElementById('logoTrack');
   if (!el) return;
 
-  // Keep using hosted SVGs (you can swap to local files anytime)
-  // Add an optional 'scale' to balance visual weight across brands
   const logos = [
-    { title:'Riot Games', href:'https://www.riotgames.com/',
-      src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
-    { title:'League of Legends', href:'https://www.leagueoflegends.com/',
-      src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
-    { title:'VALORANT', href:'https://playvalorant.com/',
-      src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
-    { title:'Honda', href:'https://www.honda.com/',
-      src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
-    { title:'Apple', href:'https://www.apple.com/',
-      src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
-    { title:'Universal Music Group', href:'https://www.universalmusic.com/',
-      src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' }
+    { title:'Riot Games', href:'https://www.riotgames.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
+    { title:'League of Legends', href:'https://www.leagueoflegends.com/', src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
+    { title:'VALORANT', href:'https://playvalorant.com/', src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
+    { title:'Honda', href:'https://www.honda.com/', src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
+    { title:'Apple', href:'https://www.apple.com/', src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
+    { title:'Universal Music Group', href:'https://www.universalmusic.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' }
   ];
 
-  function buildRow() {
+  function buildRow(batchAttr) {
     const frag = document.createDocumentFragment();
+    const images = [];
     logos.forEach(l => {
       const a = document.createElement('a');
       a.href = l.href; a.target = '_blank'; a.rel = 'noopener';
       a.className = 'h-full flex items-center';
+      a.setAttribute('data-batch', batchAttr);
 
       const img = document.createElement('img');
       img.src = l.src;
@@ -268,29 +259,48 @@
       img.className = 'logo-item';
       img.loading = 'lazy';
       img.decoding = 'async';
-      // IMPORTANT: DO NOT set img.height or img.width attributes
       if (l.scale) img.setAttribute('data-scale', l.scale);
 
       a.appendChild(img);
       frag.appendChild(a);
+      images.push(img);
     });
-    return frag;
+    return { frag, images };
   }
 
-  // Build two copies for seamless loop
+  // Build two copies (A+B)
   el.innerHTML = '';
-  el.appendChild(buildRow());
-  el.appendChild(buildRow());
+  const A = buildRow('A');
+  const B = buildRow('B');
+  el.appendChild(A.frag);
+  el.appendChild(B.frag);
 
-  // Pause on hover; respect reduced motion
-  const container = el.closest('.logo-marquee');
-  //container.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
-  container.addEventListener('mouseleave', () => { el.style.animationPlayState = 'running'; });
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    el.style.animation = 'none';
-  }
+  // Wait until first row images have intrinsic sizes, then measure
+  Promise.all(A.images.map(img => (img.decode ? img.decode().catch(()=>{}) : Promise.resolve())))
+    .then(() => {
+      // Compute pixel width of the first batch + gaps
+      const firstBatch = [...el.querySelectorAll('[data-batch="A"]')];
+      const gapStr = getComputedStyle(el).gap || getComputedStyle(el).columnGap || '0px';
+      const gap = parseFloat(gapStr) || 0;
+
+      const width = firstBatch.reduce((sum, node, i) => {
+        const w = node.getBoundingClientRect().width;
+        // add gap except after the last item
+        return sum + w + (i < firstBatch.length - 1 ? gap : 0);
+      }, 0);
+
+      // Set the loop distance and (re)start animation cleanly
+      el.style.setProperty('--loop', `${Math.ceil(width)}px`);
+      // Force restart in case CSS already applied:
+      el.style.animation = 'none';
+      // next frame re-apply animation
+      requestAnimationFrame(() => {
+        el.style.animation = '';
+      });
+    });
 })();
 </script>
+
 
 
     
