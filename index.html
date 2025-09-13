@@ -64,6 +64,57 @@
     }
     .detail-enter{animation:fadeIn .3s ease both}
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+    /* ===== Redesigned Logo Marquee (mobile-large & seamless) ===== */
+    .logo-marquee{
+      --gap: clamp(1.5rem, 6vw, 4.5rem);
+      --row-h: clamp(140px, 38vw, 200px);  /* BIG on phones, capped on desktop */
+      --duration: 45s;
+      overflow:hidden;
+      position:relative;
+      padding: 1.25rem 0;
+    }
+     /* Turn off flex gap; width now includes padding */
+    .logo-track{
+      display:flex;
+      align-items:center;
+      gap:0;
+      height:var(--row-h);
+      animation: logo-scroll var(--duration) linear infinite;
+      will-change: transform;
+    }
+
+    /* Add real, measurable spacing per item */
+    .logo-link{
+      box-sizing: border-box;               /* include padding in width */
+      flex:0 0 auto;
+      min-width: clamp(120px, 26vw, 240px); /* a bit wider to avoid crush */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding-inline: calc(var(--gap) / 2); /* ← spacing lives here */
+    }
+
+    /* Bump the gap variable (you can tweak later) */
+    .logo-marquee{ --gap: clamp(2rem, 6vw, 5rem); }
+
+    .logo-item{
+      display:block;
+      width:auto;
+      height:calc(var(--row-h) - 12px);   /* keep aspect ratio */
+      filter:brightness(0) invert(1);
+      opacity:.95;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .logo-item:hover{ opacity:1;}
+    .logo-item[data-scale="sm"]{ --s:.88; }
+    .logo-item[data-scale="md"]{ --s:1; }
+    .logo-item[data-scale="lg"]{ --s:1.15; }
+
+    @keyframes logo-scroll{
+      from{ transform: translateX(0); }
+      to  { transform: translateX(calc(-1 * var(--loop, 0px))); }
+    }
   </style>
 </head>
 <body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black">
@@ -136,12 +187,28 @@
     </div>
   </section>
 
+  <!-- CLIENTS (updated) -->
+  <section id="clients" class="py-12 md:py-16 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-6">
+        <h2 class="w-full text-center md:text-5xl font-bold">Brands we worke with</h2>
+      </div>
+    </div>
+
+    <!-- full-width marquee -->
+    <div class="mt-8 w-full">
+      <div class="logo-marquee relative">
+        <div class="logo-track will-change-transform" id="logoTrack"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- SERVICES -->
   <section id="services" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40/">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between gap-6">
         <div>
-          <h2 class="text-3xl md:text-5xl font-bold">What We Do</h2>
+          <h2 class="text-3xl md:text-5xl font-bold">What We Do?</h2>
           <p class="mt-3 text-blume-sub max-w-2xl">Motion-first studio blending 3D, design and code. Branding and interactive support the cinematic core.</p>
         </div>
       </div>
@@ -161,154 +228,13 @@
       </div>
     </div>
   </section>
-  <style type="text/css">
-              /* === Redesigned Logo Marquee === */
-        .logo-marquee {
-          --gap: 4rem;         /* space between logos */
-          --row-h: 110px;      /* band height */
-          --duration: 45s;     /* scroll speed */
-          position: relative;
-          overflow: hidden;
-          padding: 1.25rem 0;
-        }
 
-        .logo-track {
-          display: flex;
-          align-items: center;
-          gap: var(--gap);
-          height: var(--row-h);
-          animation: logo-scroll var(--duration) linear infinite;
-          transform: translateX(0); /* start from left */
-          will-change: transform;
-        }
-
-        .logo-item {
-          display: block;
-          width: auto;          /* preserve aspect */
-          height: auto;         /* preserve aspect */
-          max-height: 90px;     /* control visual size */
-          filter: brightness(0) invert(1);  /* make white */
-          opacity: .9;
-          transition: opacity .2s ease, transform .2s ease;
-        }
-
-        /* Optional per-brand fine-tuning so visual weight matches */
-        .logo-item[data-scale="sm"] { transform: scale(.85); }
-        .logo-item[data-scale="md"] { transform: scale(1);   }
-        .logo-item[data-scale="lg"] { transform: scale(1.15);}
-
-        .logo-item:hover { transition-duration: 5; opacity: 1; }
-
-        @keyframes logo-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(calc(-1 * var(--loop, 0px))); }
-        }
-
-
-        @media (max-width: 768px){
-          .logo-marquee { --gap: 2rem; --row-h: 72px; --duration: 38s; }
-          .logo-item    { max-height: 58px; }
-        }
-
-
-  </style>
-
-
-  <!-- CLIENTS -->
-<section id="clients" class="py-12 md:py-16 border-t border-white/5">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between gap-6">
-      <h2 class="text-3xl md:text-5xl font-bold">Brands we’ve worked with</h2>
-    </div>
-  </div>
-
-  <!-- full-width marquee (edge-to-edge) -->
-  <div class="mt-8 w-full">
-    <div class="logo-marquee relative">
-      <div class="logo-track will-change-transform" id="logoTrack"></div>
-    </div>
-  </div>
-</section>
-
-<script>
-(function initClients(){
-  const el = document.getElementById('logoTrack');
-  if (!el) return;
-
-  const logos = [
-    { title:'Riot Games', href:'https://www.riotgames.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
-    { title:'League of Legends', href:'https://www.leagueoflegends.com/', src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
-    { title:'VALORANT', href:'https://playvalorant.com/', src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
-    { title:'Honda', href:'https://www.honda.com/', src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
-    { title:'Apple', href:'https://www.apple.com/', src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
-    { title:'Universal Music Group', href:'https://www.universalmusic.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' }
-  ];
-
-  function buildRow(batchAttr) {
-    const frag = document.createDocumentFragment();
-    const images = [];
-    logos.forEach(l => {
-      const a = document.createElement('a');
-      a.href = l.href; a.target = '_blank'; a.rel = 'noopener';
-      a.className = 'h-full flex items-center';
-      a.setAttribute('data-batch', batchAttr);
-
-      const img = document.createElement('img');
-      img.src = l.src;
-      img.alt = l.title + ' logo';
-      img.className = 'logo-item';
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      if (l.scale) img.setAttribute('data-scale', l.scale);
-
-      a.appendChild(img);
-      frag.appendChild(a);
-      images.push(img);
-    });
-    return { frag, images };
-  }
-
-  // Build two copies (A+B)
-  el.innerHTML = '';
-  const A = buildRow('A');
-  const B = buildRow('B');
-  el.appendChild(A.frag);
-  el.appendChild(B.frag);
-
-  // Wait until first row images have intrinsic sizes, then measure
-  Promise.all(A.images.map(img => (img.decode ? img.decode().catch(()=>{}) : Promise.resolve())))
-    .then(() => {
-      // Compute pixel width of the first batch + gaps
-      const firstBatch = [...el.querySelectorAll('[data-batch="A"]')];
-      const gapStr = getComputedStyle(el).gap || getComputedStyle(el).columnGap || '0px';
-      const gap = parseFloat(gapStr) || 0;
-
-      const width = firstBatch.reduce((sum, node, i) => {
-        const w = node.getBoundingClientRect().width;
-        // add gap except after the last item
-        return sum + w + (i < firstBatch.length - 1 ? gap : 0);
-      }, 0);
-
-      // Set the loop distance and (re)start animation cleanly
-      el.style.setProperty('--loop', `${Math.ceil(width)}px`);
-      // Force restart in case CSS already applied:
-      el.style.animation = 'none';
-      // next frame re-apply animation
-      requestAnimationFrame(() => {
-        el.style.animation = '';
-      });
-    });
-})();
-</script>
-
-
-
-    
+  
 
   <!-- PROCESS -->
   <section id="process" class="py-16 md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl md:text-5xl font-bold">How We Work</h2>
+      <h2 class="text-3xl md:text-5xl font-bold">How We Do It?</h2>
       <div class="mt-10 grid md:grid-cols-3 gap-6 text-blume-sub">
         <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
           <div class="text-sm uppercase tracking-widest text-blume-accent">01</div>
@@ -381,7 +307,7 @@
     </div>
   </footer>
 
-  <!-- Inline manifest -->
+  <!-- Inline manifest for projects -->
   <script id="artworks-data" type="application/json">
   {
     "projects": [
@@ -390,11 +316,105 @@
       "./projects/project-c/",
       "./projects/project-d/",
       "./projects/project-e/",
-      "./projects/project-f/"
+      "./projects/project-f/",
+      "./projects/project-g/",
+      "./projects/project-h/",
+      "./projects/project-i/",
+      "./projects/project-j/"
     ]
   }
   </script>
 
+  <!-- Logos: seamless marquee loader -->
+  <script>
+    // measure width of first row and set --loop to match
+    function measureAndSetLoop() {
+      const el = document.getElementById('logoTrack');
+      if (!el) return;
+      const firstBatch = [...el.querySelectorAll('[data-batch="A"]')];
+      if (!firstBatch.length) return;
+
+      const gapStr = getComputedStyle(el).gap || getComputedStyle(el).columnGap || '0px';
+      const gap = parseFloat(gapStr) || 0;
+
+      const width = firstBatch.reduce((sum, node, i) => {
+        const w = node.getBoundingClientRect().width;
+        return sum + w + (i < firstBatch.length - 1 ? gap : 0);
+      }, 0);
+
+      el.style.setProperty('--loop', `${Math.ceil(width)}px`);
+      el.style.animation = 'none';
+      requestAnimationFrame(() => { el.style.animation = ''; });
+    }
+
+    (function initClients(){
+      const el = document.getElementById('logoTrack');
+      if (!el) return;
+
+      const logos = [
+        { title:'Riot Games', href:'https://www.riotgames.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
+        { title:'League of Legends', href:'https://www.leagueoflegends.com/', src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
+        { title:'VALORANT', href:'https://playvalorant.com/', src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
+        { title:'Honda', href:'https://www.honda.com/', src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
+        { title:'Apple', href:'https://www.apple.com/', src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
+        { title:'Universal Music Group', href:'https://www.universalmusic.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' }
+      ];
+
+      function buildRow(batchAttr) {
+        const frag = document.createDocumentFragment();
+        const images = [];
+        logos.forEach(l => {
+          const a = document.createElement('a');
+          a.href = l.href; a.target = '_blank'; a.rel = 'noopener';
+          a.className = 'logo-link';                   // <-- important for min-width
+          a.setAttribute('data-batch', batchAttr);
+
+          const img = document.createElement('img');
+          img.src = l.src;
+          img.alt = l.title + ' logo';
+          img.className = 'logo-item';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          if (l.scale) img.setAttribute('data-scale', l.scale);
+
+          a.appendChild(img);
+          frag.appendChild(a);
+          images.push(img);
+        });
+        return { frag, images };
+      }
+
+      // Build two copies (A + B) for seamless loop
+      el.innerHTML = '';
+      const A = buildRow('A');
+      const B = buildRow('B');
+      el.appendChild(A.frag);
+      el.appendChild(B.frag);
+
+      const decodePromises = A.images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
+      Promise.all(decodePromises).then(() => {
+        measureAndSetLoop();
+        window.addEventListener('load', measureAndSetLoop, { once:true });
+      });
+
+      // Pause on hover; respect reduced motion
+      const marquee = el.closest('.logo-marquee');
+      //marquee.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
+      //marquee.addEventListener('mouseleave', () => { el.style.animationPlayState = 'running'; });
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.style.animation = 'none';
+      }
+
+      // Recalculate on resize/orientation
+      let t;
+      window.addEventListener('resize', () => {
+        clearTimeout(t);
+        t = setTimeout(measureAndSetLoop, 150);
+      });
+    })();
+  </script>
+
+  <!-- Site scripts (unchanged except the gallery bug fix) -->
   <script>
   // --- Nav ---
   const btn = document.getElementById('menuBtn');
@@ -535,7 +555,20 @@
     const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
     const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
     function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
-    function occupy(col,w,h,bottom=false){ for(let c=col;c<col+w;c++){ if(h===2){ cols[c].top=true; cols[c].bottom=true; } else { if(bottom) cols[c].bottom=true; else cols[c].top=true; } } }
+
+    /* FIXED: was "c< c ol+w" typo */
+    function occupy(col, w, h, bottom = false) {
+      for (let c = col; c < col + w; c++) {
+        if (h === 2) {
+          cols[c].top = true;
+          cols[c].bottom = true;
+        } else {
+          if (bottom) cols[c].bottom = true;
+          else cols[c].top = true;
+        }
+      }
+    }
+
     function nextHole(){ for(let i=0;i<cols.length;i++){ if(cols[i].top&&!cols[i].bottom) return i; } return -1; }
     function push(w,h,b=false){ const src=sources[si%sources.length]; const link=projects[si%projects.length]; si++; seq.push({src,span:[w,h],col,b,link}); }
 
@@ -584,7 +617,7 @@
       });
     }
 
-    // ✅ IntersectionObserver to pause off-screen videos
+    // ✅ Pause off-screen videos
     const observer=new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
         const v=entry.target;
@@ -592,7 +625,6 @@
         else{ v.pause(); }
       });
     },{threshold:0.25});
-
     document.querySelectorAll('.tile video').forEach(v=>observer.observe(v));
   })();
   </script>

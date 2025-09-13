@@ -1,13 +1,13 @@
 {
-  "title": "Project I",
+  "title": "Project J",
   "year": 2025,
   "roles": [
     "Direction",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project I.",
-  "cover": "cover.jpg",
+  "description": "Placeholder description for Project J.",
+  "cover": "cover.mp4",
   "assets": [
     "shot1.jpg"
   ],
