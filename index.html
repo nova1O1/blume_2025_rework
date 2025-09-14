@@ -40,10 +40,23 @@
     header,section,footer{position:relative;z-index:1}
 
     /* ====== Puzzle River ====== */
-    .puzzle{position:relative}
-    .puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 4%, rgba(10,10,10,0) 10%, rgba(10,10,10,0) 90%, rgba(10,10,10,.35) 96%, rgba(10,10,10,0) 100%)}
-    .puzzle-track{display:grid; grid-auto-flow:column dense; align-items:stretch; gap:var(--gap, .75rem);
-      grid-template-rows:repeat(2, var(--rowH, 14rem)); grid-auto-columns:var(--colW, 18rem);}
+.puzzle{position:relative}
+.puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(10,10,10,0) 0%, rgba(10,10,10,.35) 4%, rgba(10,10,10,0) 10%, rgba(10,10,10,0) 90%, rgba(10,10,10,.35) 96%, rgba(10,10,10,0) 100%)}
+
+/* Smaller tiles + tighter gap on mobile, scale up at md+ */
+.puzzle-track{
+  display:grid;
+  grid-auto-flow:column dense;
+  align-items:stretch;
+  gap:var(--gap, .5rem);                                /* was .75rem */
+
+  /* mobile-friendly sizes (auto-scale by viewport) */
+  --rowH: clamp(9rem, 26vw, 12rem);                     /* was 14rem */
+  --colW: clamp(11rem, 44vw, 16rem);                    /* was 18rem */
+
+  grid-template-rows: repeat(2, var(--rowH));
+  grid-auto-columns: var(--colW);
+}
     @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
