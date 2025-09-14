@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Blume — Cinematic Worlds where Art meets Code</title>
+  <title>Blume | Cinematic Worlds</title>
+  <link rel="preload" as="video" href="./blume_load_anim.webm" type='video/webm; codecs="vp9"'>
+
   <meta name="description" content="Blume is a studio crafting bold visual worlds through cinematic 3D & motion. From music & culture to branding and digital, we blend art and code to build immersive identities." />
 
   <!-- Tailwind via CDN -->
@@ -118,6 +120,25 @@
   </style>
 </head>
 <body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black">
+      <!-- App Loader Overlay -->
+    <div id="appLoader"
+         class="fixed inset-0 z-[9999] grid place-items-center bg-blume-bg/95 backdrop-blur-sm transition-opacity duration-500">
+      <!-- Your looping WEBM -->
+      <video id="appLoaderVid"
+             src="./blume_load_anim.webm"
+             autoplay muted loop playsinline preload="auto"
+             class="w-[min(70vmin,28rem)] h-[min(70vmin,28rem)] object-contain motion-reduce:hidden">
+      </video>
+
+      <!-- Fallback (if WEBM not supported or motion reduced) -->
+      <div id="appLoaderFallback"
+           class="hidden flex-col items-center gap-3 text-blume-sub motion-reduce:flex">
+        <div class="h-6 w-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <span>Loading…</span>
+      </div>
+
+      <span class="sr-only">Loading</span>
+    </div>
 
   <!-- NAV -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border-b border-white/5">
@@ -167,7 +188,21 @@
       </div>
     </div>
   </section>
+  <!-- CLIENTS (updated) -->
+  <section id="clients" class="py-12 md:py-16 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between gap-6">
+        <h2 class="w-full text-center md:text-5xl font-bold">Brands we work with</h2>
+      </div>
+    </div>
 
+    <!-- full-width marquee -->
+    <div class="mt-8 w-full">
+      <div class="logo-marquee relative">
+        <div class="logo-track will-change-transform" id="logoTrack"></div>
+      </div>
+    </div>
+  </section>
   <!-- GALLERY -->
   <section id="work" class="py-12 md:py-16">
     <div class="w-full px-2 sm:px-4 lg:px-6">
@@ -187,21 +222,7 @@
     </div>
   </section>
 
-  <!-- CLIENTS (updated) -->
-  <section id="clients" class="py-12 md:py-16 border-t border-white/5">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between gap-6">
-        <h2 class="w-full text-center md:text-5xl font-bold">Brands we worke with</h2>
-      </div>
-    </div>
 
-    <!-- full-width marquee -->
-    <div class="mt-8 w-full">
-      <div class="logo-marquee relative">
-        <div class="logo-track will-change-transform" id="logoTrack"></div>
-      </div>
-    </div>
-  </section>
 
   <!-- SERVICES -->
   <section id="services" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40/">
@@ -256,21 +277,52 @@
   </section>
 
   <!-- ABOUT -->
-  <section id="about" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-2 gap-12 items-start">
-        <div>
-          <h2 class="text-3xl md:text-5xl font-bold">About Blume</h2>
-          <p class="mt-4 text-blume-sub max-w-2xl">Blume is a studio of visual artists and programmers. We mix craft and code to create work that feels alive—across music, culture, esports and digital-first brands.</p>
-          <div class="mt-6 grid grid-cols-3 gap-4 text-sm text-blume-sub">
-            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">3+</div><div>Core disciplines</div></div>
-            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">1000+</div><div>Projects shipped</div></div>
-            <div class="rounded-xl border border-white/10 p-4 bg-white/5"><div class="text-2xl font-bold text-white">∞</div><div>Ideas brewing</div></div>
+<section id="about" class="py-16 md:py-24 border-t border-white/5 bg-blume-tint/40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Left: copy + stats -->
+      <div>
+        <h2 class="text-3xl md:text-5xl font-bold">About Blume</h2>
+        <p class="mt-4 text-blume-sub max-w-2xl">
+          Blume is a studio of visual artists and programmers. We mix craft and code to create work that feels alive—across music, culture, esports and digital-first brands.
+        </p>
+
+        <div class="mt-6 grid grid-cols-3 gap-4 text-sm text-blume-sub">
+          <div class="rounded-xl border border-white/10 p-4 bg-white/5">
+            <div class="text-2xl font-bold text-white">3+</div><div>Core disciplines</div>
+          </div>
+          <div class="rounded-xl border border-white/10 p-4 bg-white/5">
+            <div class="text-2xl font-bold text-white">1000+</div><div>Projects shipped</div>
+          </div>
+          <div class="rounded-xl border border-white/10 p-4 bg-white/5">
+            <div class="text-2xl font-bold text-white">∞</div><div>Ideas brewing</div>
           </div>
         </div>
       </div>
+
+      <!-- Right: looping loader animation -->
+      <div class="hidden md:block">
+        <div class="">
+          <!-- WEBM loop -->
+          <video id="aboutLoop"
+                 src="./blume_load_anim.webm"
+                 autoplay muted loop playsinline preload="auto"
+                 class="w-full aspect-square object-contain motion-reduce:hidden
+                        [filter:drop-shadow(0_0_24px_rgba(255,106,0,0.25))]"
+                 aria-hidden="true"></video>
+
+          <!-- Fallback (replaces video if unsupported or reduced motion) -->
+          <!-- If you have a still, point src to it; otherwise leave blank or remove -->
+          <img id="aboutFallback"
+               src=""
+               alt=""
+               class="hidden w-full aspect-square object-contain">
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- CONTACT -->
   <section id="contact" class="py-16 md:py-24">
@@ -320,10 +372,57 @@
       "./projects/project-g/",
       "./projects/project-h/",
       "./projects/project-i/",
-      "./projects/project-j/"
+      "./projects/project-j/",
+      "./projects/project-k/"
     ]
   }
+
+
   </script>
+  <script>
+(function initAppLoader(){
+  const overlay   = document.getElementById('appLoader');
+  if(!overlay) return;
+
+  const vid       = document.getElementById('appLoaderVid');
+  const fallback  = document.getElementById('appLoaderFallback');
+
+  // Lock scroll while loading
+  document.documentElement.classList.add('overflow-hidden');
+  document.body.classList.add('overflow-hidden');
+
+  // Check WebM VP9 support (alpha-capable in Chromium/Firefox; Safari usually false)
+  const probe = document.createElement('video');
+  const supportsWebM = !!probe.canPlayType && probe.canPlayType('video/webm; codecs="vp9"') !== '';
+  if (!supportsWebM && vid) { vid.remove(); fallback?.classList.remove('hidden'); }
+
+  // Helpers
+  const hide = () => {
+    overlay.classList.add('opacity-0');
+    setTimeout(() => {
+      overlay.remove();
+      document.documentElement.classList.remove('overflow-hidden');
+      document.body.classList.remove('overflow-hidden');
+    }, 500);
+  };
+
+  // Readiness signals
+  const winLoaded  = new Promise(r => window.addEventListener('load', r, { once:true }));
+  const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+  const videoReady = new Promise(r => {
+    if (!vid || !supportsWebM) return r();            // no video to wait for
+    if (vid.readyState >= 3) return r();              // already buffered
+    const done = () => r();
+    vid.addEventListener('canplaythrough', done, { once:true });
+    vid.play && vid.play().catch(()=>{});             // kick autoplay
+    setTimeout(done, 1800);                            // soft timeout so we don't hang
+  });
+  const minShow   = new Promise(r => setTimeout(r, 350)); // avoid flash
+
+  Promise.all([winLoaded, fontsReady, videoReady, minShow]).then(hide);
+  setTimeout(hide, 8000); // hard cap, just in case
+})();
+</script>
 
   <!-- Logos: seamless marquee loader -->
   <script>
@@ -352,13 +451,29 @@
       if (!el) return;
 
       const logos = [
-        { title:'Riot Games', href:'https://www.riotgames.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
-        { title:'League of Legends', href:'https://www.leagueoflegends.com/', src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
-        { title:'VALORANT', href:'https://playvalorant.com/', src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
-        { title:'Honda', href:'https://www.honda.com/', src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
-        { title:'Apple', href:'https://www.apple.com/', src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
-        { title:'Universal Music Group', href:'https://www.universalmusic.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' }
-      ];
+          // …your existing logos…
+  { title:'Riot Games', href:'https://www.riotgames.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/cb/Riot_Games_2022_wordmark.svg', scale:'md' },
+  { title:'League of Legends', href:'https://www.leagueoflegends.com/', src:'https://upload.wikimedia.org/wikipedia/commons/d/d8/League_of_Legends_2019_vector.svg', scale:'sm' },
+  { title:'VALORANT', href:'https://playvalorant.com/', src:'https://upload.wikimedia.org/wikipedia/commons/4/44/Valorant_logo.svg', scale:'lg' },
+  { title:'Honda', href:'https://www.honda.com/', src:'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg', scale:'md' },
+  { title:'Team Liquid',
+  href:'https://www.teamliquid.com/',
+   src:'https://b2272258.smushcdn.com/2272258/wp-content/uploads/2020/10/MonoLight_Icon.png?lossy=1&strip=1&webp=1',
+    scale:'md'
+  },
+  { title:'Universal Music Group', href:'https://www.universalmusic.com/', src:'https://upload.wikimedia.org/wikipedia/commons/c/c4/Universal_Music_Group_logo.svg', scale:'lg' },
+
+  { title:'Apple', href:'https://www.apple.com/', src:'https://upload.wikimedia.org/wikipedia/commons/8/8a/Apple_Logo.svg', scale:'md' },
+  { title:'LEC (League of Legends EMEA Championship)', href:'https://lolesports.com/', src:'https://upload.wikimedia.org/wikipedia/commons/e/ef/League_of_Legends_EMEA_Championship.png', scale:'lg' },
+  { title:'G2 Esports', href:'https://g2esports.com/', src:'https://upload.wikimedia.org/wikipedia/en/thumb/1/12/Esports_organization_G2_Esports_logo.svg/500px-Esports_organization_G2_Esports_logo.svg.png', scale:'md' },
+  { title:'505 Games', href:'https://505games.com/', src:'https://upload.wikimedia.org/wikipedia/commons/8/8f/505_Games_logo.svg', scale:'md' },
+  { 
+  title: 'Mobile Legends: Bang Bang',
+  href: 'https://www.mobilelegends.com/',
+  src: 'https://upload.wikimedia.org/wikipedia/en/6/61/Mobile-legends-logo.svg',
+  scale: 'md'
+},
+];
 
       function buildRow(batchAttr) {
         const frag = document.createDocumentFragment();
