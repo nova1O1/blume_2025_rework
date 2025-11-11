@@ -76,14 +76,9 @@ body.grain::before{
   position:relative;
   cursor:grab;
   touch-action:pan-y;
-  --spot-x:50%;
-  --spot-y:50%;
-  --spot-opacity:0;
-  --spot-size:52%;
   transition:transform .45s ease;
 }
 .puzzle.is-dragging{cursor:grabbing;}
-.puzzle::before,
 .puzzle::after{content:"";position:absolute;inset:-1px;pointer-events:none;}
 .puzzle::after{
   z-index:2;
@@ -94,19 +89,11 @@ body.grain::before{
   mix-blend-mode:multiply;
   transition:opacity .4s ease;
 }
-.puzzle::before{
-  z-index:3;
-  background:radial-gradient(circle at var(--spot-x,50%) var(--spot-y,50%), rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.32) 20%, rgba(255,255,255,0.14) 36%, transparent var(--spot-size,52%));
-  opacity:var(--spot-opacity,0);
-  mix-blend-mode:screen;
-  filter:blur(24px);
-  transition:opacity .45s ease;
-}
 .puzzle.is-hovered .puzzle-track{filter:saturate(1.08) brightness(1.04);}
 .puzzle.is-dragging .puzzle-track{filter:saturate(1.12) brightness(1.05);}
 .puzzle.is-dragging::after{opacity:.7;}
-@media (prefers-reduced-motion: reduce){ .puzzle::before{display:none;} }
-@media (pointer: coarse){ .puzzle::before{display:none;} }
+@media (prefers-reduced-motion: reduce){ .tile::after{display:none;} }
+@media (pointer: coarse){ .tile::after{display:none;} }
 
 /* Smaller tiles + tighter gap on mobile, scale up at md+ */
 .puzzle-track{
@@ -130,8 +117,9 @@ body.grain::before{
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
 
-    .tile{position:relative; overflow:hidden; border-radius:0.9rem; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); box-shadow:0 18px 45px -35px rgba(0,0,0,0.85); transition:transform .55s cubic-bezier(.22,.61,.36,1), box-shadow .55s cubic-bezier(.22,.61,.36,1), border-color .45s ease, background .45s ease; outline:none;}
+    .tile{position:relative; overflow:hidden; border-radius:0.9rem; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); box-shadow:0 18px 45px -35px rgba(0,0,0,0.85); transition:transform .55s cubic-bezier(.22,.61,.36,1), box-shadow .55s cubic-bezier(.22,.61,.36,1), border-color .45s ease, background .45s ease; outline:none; --tile-spot-x:50%; --tile-spot-y:50%; --tile-spot-opacity:0; --tile-spot-size:52%;}
     .tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg, rgba(255,106,0,0.16), transparent 45%);opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;z-index:2;pointer-events:none;}
+    .tile::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:1;background:radial-gradient(circle at var(--tile-spot-x,50%) var(--tile-spot-y,50%), rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.32) 20%, rgba(255,255,255,0.14) 36%, transparent var(--tile-spot-size,52%));opacity:var(--tile-spot-opacity,0);mix-blend-mode:screen;filter:blur(24px);transition:opacity .45s ease;}
     .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,.61,.36,1), filter .6s cubic-bezier(.22,.61,.36,1);}
     .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1);}
     .tile:hover img, .tile:focus-visible img{transform:scale(1.08); filter:brightness(1.1);}
@@ -801,6 +789,7 @@ body.grain::before{
 
     container.dataset.interactionsReady = '1';
     let hovered = false;
+    let activeTile = null;
     const pointerIsFine = ev => !ev || ev.pointerType === '' || ev.pointerType === 'mouse' || ev.pointerType === 'pen';
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
     const spot = {
@@ -815,12 +804,53 @@ body.grain::before{
       raf:null
     };
     const applySpot = ()=>{
-      container.style.setProperty('--spot-x', `${spot.x}%`);
-      container.style.setProperty('--spot-y', `${spot.y}%`);
-      container.style.setProperty('--spot-size', `${spot.size}%`);
-      container.style.setProperty('--spot-opacity', `${spot.opacity}`);
+      if(!activeTile) return;
+      activeTile.style.setProperty('--tile-spot-x', `${spot.x}%`);
+      activeTile.style.setProperty('--tile-spot-y', `${spot.y}%`);
+      activeTile.style.setProperty('--tile-spot-size', `${spot.size}%`);
+      activeTile.style.setProperty('--tile-spot-opacity', `${spot.opacity}`);
+    };
+    const deactivateTile = (tile)=>{
+      if(!tile) return;
+      tile.classList.remove('is-spotlit');
+      tile.style.setProperty('--tile-spot-opacity','0');
+      tile.style.removeProperty('--tile-spot-x');
+      tile.style.removeProperty('--tile-spot-y');
+      tile.style.removeProperty('--tile-spot-size');
+    };
+    const clearActiveTile = ()=>{
+      if(!activeTile) return;
+      deactivateTile(activeTile);
+      activeTile = null;
+    };
+    const activateTile = (tile, initialX, initialY)=>{
+      if(activeTile === tile) return;
+      if(activeTile && activeTile !== tile){
+        deactivateTile(activeTile);
+      }
+      activeTile = tile;
+      if(activeTile){
+        activeTile.classList.add('is-spotlit');
+        if(typeof initialX === 'number'){
+          spot.x = initialX;
+          spot.targetX = initialX;
+        }
+        if(typeof initialY === 'number'){
+          spot.y = initialY;
+          spot.targetY = initialY;
+        }
+        spot.size = 52;
+        spot.opacity = 0;
+        spot.targetSize = 52;
+        spot.targetOpacity = 0;
+        applySpot();
+      }
     };
     const animateSpot = ()=>{
+      if(!activeTile){
+        spot.raf = null;
+        return;
+      }
       const ease = 0.18;
       spot.x += (spot.targetX - spot.x) * ease;
       spot.y += (spot.targetY - spot.y) * ease;
@@ -838,6 +868,9 @@ body.grain::before{
         spot.raf = requestAnimationFrame(animateSpot);
       } else {
         spot.raf = null;
+        if(spot.targetOpacity === 0){
+          clearActiveTile();
+        }
       }
     };
     const kickSpot = ()=>{
@@ -846,6 +879,7 @@ body.grain::before{
       }
     };
     const setSpotTarget = (x, y, opacity, size)=>{
+      if(!activeTile) return;
       spot.targetX = clamp(x, -10, 110);
       spot.targetY = clamp(y, -10, 110);
       spot.targetOpacity = Math.max(0, Math.min(0.7, opacity));
@@ -853,22 +887,39 @@ body.grain::before{
       kickSpot();
     };
     const resetSpot = ()=>{
-      spot.targetX = 50;
-      spot.targetY = 50;
+      if(!activeTile) return;
       spot.targetOpacity = 0;
       spot.targetSize = 56;
       kickSpot();
     };
+    const getTileFromPointer = (ev)=>{
+      if(!pointerIsFine(ev)) return null;
+      const base = ev.target && typeof ev.target.closest === 'function' ? ev.target.closest('.tile') : null;
+      if(base) return base;
+      if(typeof document !== 'undefined' && typeof ev.clientX === 'number' && typeof ev.clientY === 'number'){
+        const alt = document.elementFromPoint(ev.clientX, ev.clientY);
+        if(alt) return alt.closest('.tile');
+      }
+      return null;
+    };
     const updateSpotFromPointer = (ev)=>{
       if(!pointerIsFine(ev)) return;
-      const rect = container.getBoundingClientRect();
-      if(rect.width <= 0 || rect.height <= 0) return;
-      const x = ((ev.clientX - rect.left) / rect.width) * 100;
-      const y = ((ev.clientY - rect.top) / rect.height) * 100;
-      const active = container.classList.contains('is-dragging');
-      const baseOpacity = active ? 0.28 : 0.42;
-      const baseSize = active ? 66 : 54;
-      setSpotTarget(x, y, baseOpacity, baseSize);
+      const tile = getTileFromPointer(ev);
+      if(tile){
+        const rect = tile.getBoundingClientRect();
+        if(rect.width <= 0 || rect.height <= 0) return;
+        const x = ((ev.clientX - rect.left) / rect.width) * 100;
+        const y = ((ev.clientY - rect.top) / rect.height) * 100;
+        if(activeTile !== tile){
+          activateTile(tile, x, y);
+        }
+        const active = container.classList.contains('is-dragging');
+        const baseOpacity = active ? 0.28 : 0.42;
+        const baseSize = active ? 66 : 54;
+        setSpotTarget(x, y, baseOpacity, baseSize);
+      } else if(activeTile){
+        setSpotTarget(spot.x, spot.y, 0, 58);
+      }
     };
     applySpot();
 
