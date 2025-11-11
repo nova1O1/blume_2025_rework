@@ -72,9 +72,41 @@ body.grain::before{
     header,section,footer{position:relative;z-index:1}
 
     /* ====== Puzzle River ====== */
-.puzzle{position:relative;cursor:grab;touch-action:pan-y;}
+.puzzle{
+  position:relative;
+  cursor:grab;
+  touch-action:pan-y;
+  --spot-x:50%;
+  --spot-y:50%;
+  --spot-opacity:0;
+  --spot-size:52%;
+  transition:transform .45s ease;
+}
 .puzzle.is-dragging{cursor:grabbing;}
-.puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;}
+.puzzle::before,
+.puzzle::after{content:"";position:absolute;inset:-1px;pointer-events:none;}
+.puzzle::after{
+  z-index:2;
+  background:
+    linear-gradient(90deg, rgba(12,12,12,0.95), rgba(12,12,12,0) 12%, rgba(12,12,12,0) 88%, rgba(12,12,12,0.95)),
+    linear-gradient(180deg, rgba(0,0,0,0.38), rgba(0,0,0,0));
+  opacity:.85;
+  mix-blend-mode:multiply;
+  transition:opacity .4s ease;
+}
+.puzzle::before{
+  z-index:3;
+  background:radial-gradient(circle at var(--spot-x,50%) var(--spot-y,50%), rgba(255,106,0,0.55) 0%, rgba(255,106,0,0.28) 20%, rgba(255,106,0,0.12) 36%, transparent var(--spot-size,52%));
+  opacity:var(--spot-opacity,0);
+  mix-blend-mode:screen;
+  filter:blur(24px);
+  transition:opacity .45s ease;
+}
+.puzzle.is-hovered .puzzle-track{filter:saturate(1.08) brightness(1.04);}
+.puzzle.is-dragging .puzzle-track{filter:saturate(1.12) brightness(1.05);}
+.puzzle.is-dragging::after{opacity:.7;}
+@media (prefers-reduced-motion: reduce){ .puzzle::before{display:none;} }
+@media (pointer: coarse){ .puzzle::before{display:none;} }
 
 /* Smaller tiles + tighter gap on mobile, scale up at md+ */
 .puzzle-track{
@@ -82,6 +114,9 @@ body.grain::before{
   grid-auto-flow:column dense;
   align-items:stretch;
   gap:var(--gap, .5rem);                                /* was .75rem */
+  position:relative;
+  z-index:1;
+  transition:filter .6s ease;
 
   /* mobile-friendly sizes (auto-scale by viewport) */
   --rowH: clamp(9rem, 26vw, 12rem);                     /* was 14rem */
@@ -95,11 +130,16 @@ body.grain::before{
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
 
-    .tile{position:relative; overflow:hidden; border-radius:0.75rem; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05)}
-    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
-    .tile video{opacity:1; transition:opacity .35s ease}
-    .tile:hover img{transform:scale(1.06); filter:brightness(1.15)}
-    .tile img{transition:transform .3s ease, filter .3s ease}
+    .tile{position:relative; overflow:hidden; border-radius:0.9rem; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); box-shadow:0 18px 45px -35px rgba(0,0,0,0.85); transition:transform .55s cubic-bezier(.22,.61,.36,1), box-shadow .55s cubic-bezier(.22,.61,.36,1), border-color .45s ease, background .45s ease; outline:none;}
+    .tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg, rgba(255,106,0,0.16), transparent 45%);opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;z-index:2;pointer-events:none;}
+    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,.61,.36,1), filter .6s cubic-bezier(.22,.61,.36,1);}
+    .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1);}
+    .tile:hover img, .tile:focus-visible img{transform:scale(1.08); filter:brightness(1.1);}
+    .tile:hover video, .tile:focus-visible video{transform:scale(1.05);}
+    .tile:hover{transform:translateY(-6px) scale(1.025); box-shadow:0 30px 60px -35px rgba(0,0,0,0.9), 0 18px 35px -24px rgba(255,106,0,0.25); border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.08);}
+    .tile:hover::before, .tile:focus-visible::before{opacity:1;}
+    .tile:focus-visible{transform:translateY(-4px) scale(1.015); box-shadow:0 28px 55px -38px rgba(0,0,0,0.88), 0 16px 30px -24px rgba(255,106,0,0.3); border-color:rgba(255,255,255,0.35); outline:2px solid rgba(255,106,0,0.55); outline-offset:4px;}
+    .puzzle.is-dragging .tile{transition:transform .15s linear, box-shadow .2s ease;}
 
     .run{animation:puzzle-scroll var(--duration, 70s) linear infinite}
     .reverse{animation-direction:reverse}
@@ -761,18 +801,94 @@ body.grain::before{
 
     container.dataset.interactionsReady = '1';
     let hovered = false;
+    const pointerIsFine = ev => !ev || ev.pointerType === '' || ev.pointerType === 'mouse' || ev.pointerType === 'pen';
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const spot = {
+      x:50,
+      y:50,
+      size:52,
+      opacity:0,
+      targetX:50,
+      targetY:50,
+      targetSize:52,
+      targetOpacity:0,
+      raf:null
+    };
+    const applySpot = ()=>{
+      container.style.setProperty('--spot-x', `${spot.x}%`);
+      container.style.setProperty('--spot-y', `${spot.y}%`);
+      container.style.setProperty('--spot-size', `${spot.size}%`);
+      container.style.setProperty('--spot-opacity', `${spot.opacity}`);
+    };
+    const animateSpot = ()=>{
+      const ease = 0.18;
+      spot.x += (spot.targetX - spot.x) * ease;
+      spot.y += (spot.targetY - spot.y) * ease;
+      spot.size += (spot.targetSize - spot.size) * ease;
+      spot.opacity += (spot.targetOpacity - spot.opacity) * ease;
+      const done = Math.abs(spot.x - spot.targetX) < 0.05 && Math.abs(spot.y - spot.targetY) < 0.05 && Math.abs(spot.size - spot.targetSize) < 0.15 && Math.abs(spot.opacity - spot.targetOpacity) < 0.01;
+      if(done){
+        spot.x = spot.targetX;
+        spot.y = spot.targetY;
+        spot.size = spot.targetSize;
+        spot.opacity = spot.targetOpacity;
+      }
+      applySpot();
+      if(!done){
+        spot.raf = requestAnimationFrame(animateSpot);
+      } else {
+        spot.raf = null;
+      }
+    };
+    const kickSpot = ()=>{
+      if(!spot.raf){
+        spot.raf = requestAnimationFrame(animateSpot);
+      }
+    };
+    const setSpotTarget = (x, y, opacity, size)=>{
+      spot.targetX = clamp(x, -10, 110);
+      spot.targetY = clamp(y, -10, 110);
+      spot.targetOpacity = Math.max(0, Math.min(0.7, opacity));
+      spot.targetSize = clamp(size, 38, 80);
+      kickSpot();
+    };
+    const resetSpot = ()=>{
+      spot.targetX = 50;
+      spot.targetY = 50;
+      spot.targetOpacity = 0;
+      spot.targetSize = 56;
+      kickSpot();
+    };
+    const updateSpotFromPointer = (ev)=>{
+      if(!pointerIsFine(ev)) return;
+      const rect = container.getBoundingClientRect();
+      if(rect.width <= 0 || rect.height <= 0) return;
+      const x = ((ev.clientX - rect.left) / rect.width) * 100;
+      const y = ((ev.clientY - rect.top) / rect.height) * 100;
+      const active = container.classList.contains('is-dragging');
+      const baseOpacity = active ? 0.28 : 0.42;
+      const baseSize = active ? 66 : 54;
+      setSpotTarget(x, y, baseOpacity, baseSize);
+    };
+    applySpot();
 
     const setPaused = (value)=>{
       getStates().forEach(state => { state.paused = value; });
     };
 
-    container.addEventListener('pointerenter', ()=>{
+    container.addEventListener('pointerenter', (ev)=>{
       hovered = true;
       setPaused(true);
+      if(pointerIsFine(ev)){
+        container.classList.add('is-hovered');
+        updateSpotFromPointer(ev);
+      }
     });
 
-    container.addEventListener('pointerleave', ()=>{
+    container.addEventListener('pointerleave', (ev)=>{
       hovered = false;
+      container.classList.remove('is-hovered');
+      if(pointerIsFine(ev)) resetSpot();
       if(getStates().some(state => state.dragging)) return;
       setPaused(false);
     });
@@ -783,6 +899,10 @@ body.grain::before{
       hovered = true;
       setPaused(true);
       container.classList.add('is-dragging');
+      if(pointerIsFine(ev)){
+        container.classList.add('is-hovered');
+        updateSpotFromPointer(ev);
+      }
       const states = getStates();
       states.forEach(state => {
         state.dragging = true;
@@ -794,6 +914,7 @@ body.grain::before{
     });
 
     container.addEventListener('pointermove', (ev)=>{
+      updateSpotFromPointer(ev);
       const states = getStates();
       states.forEach(state => {
         if(!state.dragging) return;
@@ -813,6 +934,17 @@ body.grain::before{
       });
       container.classList.remove('is-dragging');
       if(ev){ try{ container.releasePointerCapture(ev.pointerId); } catch {} }
+      if(pointerIsFine(ev)){
+        if(hovered){
+          updateSpotFromPointer(ev);
+        } else {
+          container.classList.remove('is-hovered');
+          resetSpot();
+        }
+      } else if(!hovered){
+        container.classList.remove('is-hovered');
+        resetSpot();
+      }
       if(!hovered) setPaused(false);
     };
 
