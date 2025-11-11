@@ -115,11 +115,13 @@ body.grain::before{
     /* ===== Redesigned Logo Marquee (mobile-large & seamless) ===== */
     .logo-marquee{
       --gap: clamp(1.5rem, 6vw, 4.5rem);
-      --row-h: clamp(140px, 38vw, 200px);  /* BIG on phones, capped on desktop */
+      --row-h: clamp(120px, 32vw, 180px);  /* Slightly shorter to stack two rows */
       --duration: 45s;
       overflow:hidden;
       position:relative;
       padding: 1.25rem 0;
+      display:grid;
+      gap: clamp(1.25rem, 4vw, 2.5rem);
     }
      /* Turn off flex gap; width now includes padding */
     .logo-track{
@@ -244,7 +246,8 @@ body.grain::before{
     <!-- full-width marquee -->
     <div class="mt-8 w-full">
       <div class="logo-marquee relative">
-        <div class="logo-track will-change-transform" id="logoTrack"></div>
+        <div class="logo-track will-change-transform" id="logoTrackTop"></div>
+        <div class="logo-track will-change-transform reverse" id="logoTrackBottom"></div>
       </div>
     </div>
   </section>
@@ -491,14 +494,13 @@ body.grain::before{
 
   <!-- Logos: seamless marquee loader -->
   <script>
-    // measure width of first row and set --loop to match
-    function measureAndSetLoop() {
-      const el = document.getElementById('logoTrack');
-      if (!el) return;
-      const firstBatch = [...el.querySelectorAll('[data-batch="A"]')];
+    // measure width of first batch per row and set --loop to match
+    function measureAndSetLoop(track) {
+      if (!track) return;
+      const firstBatch = [...track.querySelectorAll('[data-batch="A"]')];
       if (!firstBatch.length) return;
 
-      const gapStr = getComputedStyle(el).gap || getComputedStyle(el).columnGap || '0px';
+      const gapStr = getComputedStyle(track).gap || getComputedStyle(track).columnGap || '0px';
       const gap = parseFloat(gapStr) || 0;
 
       const width = firstBatch.reduce((sum, node, i) => {
@@ -506,14 +508,16 @@ body.grain::before{
         return sum + w + (i < firstBatch.length - 1 ? gap : 0);
       }, 0);
 
-      el.style.setProperty('--loop', `${Math.ceil(width)}px`);
-      el.style.animation = 'none';
-      requestAnimationFrame(() => { el.style.animation = ''; });
+      track.style.setProperty('--loop', `${Math.ceil(width)}px`);
+      track.style.animation = 'none';
+      requestAnimationFrame(() => { track.style.animation = ''; });
     }
 
     (function initClients(){
-      const el = document.getElementById('logoTrack');
-      if (!el) return;
+      const marquee = document.querySelector('.logo-marquee');
+      if (!marquee) return;
+      const tracks = [...marquee.querySelectorAll('.logo-track')];
+      if (!tracks.length) return;
 
       const logos = [
           // …your existing logos…
@@ -540,10 +544,10 @@ body.grain::before{
 },
 ];
 
-      function buildRow(batchAttr) {
+      function buildRow(source, batchAttr) {
         const frag = document.createDocumentFragment();
         const images = [];
-        logos.forEach(l => {
+        source.forEach(l => {
           const a = document.createElement('a');
           a.href = l.href; a.target = '_blank'; a.rel = 'noopener';
           a.className = 'logo-link';                   // <-- important for min-width
@@ -564,32 +568,37 @@ body.grain::before{
         return { frag, images };
       }
 
-      // Build two copies (A + B) for seamless loop
-      el.innerHTML = '';
-      const A = buildRow('A');
-      const B = buildRow('B');
-      el.appendChild(A.frag);
-      el.appendChild(B.frag);
+      const rows = [[], []];
+      logos.forEach((logo, idx) => rows[idx % 2].push(logo));
+      if (!rows[1].length) rows[1] = [...rows[0]];
 
-      const decodePromises = A.images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
-      Promise.all(decodePromises).then(() => {
-        measureAndSetLoop();
-        window.addEventListener('load', measureAndSetLoop, { once:true });
-      });
+      function setupTrack(track, source) {
+        track.innerHTML = '';
+        const A = buildRow(source, 'A');
+        const B = buildRow(source, 'B');
+        track.appendChild(A.frag);
+        track.appendChild(B.frag);
 
-      // Pause on hover; respect reduced motion
-      const marquee = el.closest('.logo-marquee');
-      //marquee.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
-      //marquee.addEventListener('mouseleave', () => { el.style.animationPlayState = 'running'; });
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        el.style.animation = 'none';
+        const decodePromises = A.images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
+        return Promise.all(decodePromises).then(() => measureAndSetLoop(track));
       }
 
-      // Recalculate on resize/orientation
+      Promise.all(tracks.map((track, idx) => setupTrack(track, rows[idx % rows.length]))).then(() => {
+        if (document.readyState === 'complete') {
+          tracks.forEach(measureAndSetLoop);
+        } else {
+          window.addEventListener('load', () => tracks.forEach(measureAndSetLoop), { once:true });
+        }
+      });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        tracks.forEach(track => track.style.animation = 'none');
+      }
+
       let t;
       window.addEventListener('resize', () => {
         clearTimeout(t);
-        t = setTimeout(measureAndSetLoop, 150);
+        t = setTimeout(() => tracks.forEach(measureAndSetLoop), 150);
       });
     })();
   </script>
