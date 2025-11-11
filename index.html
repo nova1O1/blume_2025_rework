@@ -72,7 +72,8 @@ body.grain::before{
     header,section,footer{position:relative;z-index:1}
 
     /* ====== Puzzle River ====== */
-.puzzle{position:relative}
+.puzzle{position:relative;cursor:grab;touch-action:pan-y;}
+.puzzle.is-dragging{cursor:grabbing;}
 .puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;}
 
 /* Smaller tiles + tighter gap on mobile, scale up at md+ */
@@ -88,6 +89,7 @@ body.grain::before{
 
   grid-template-rows: repeat(2, var(--rowH));
   grid-auto-columns: var(--colW);
+  user-select:none;
 }
     @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
@@ -699,6 +701,126 @@ body.grain::before{
   /* =========================
      Puzzle River Loader + Video Culling
   ==========================*/
+  const PUZZLE_SCROLLERS = new Map();
+  let puzzleTicker = null;
+  let puzzleLastTick = 0;
+
+  function wrapOffset(offset, loop){
+    if(!loop) return offset;
+    while(offset < -loop) offset += loop;
+    while(offset > 0) offset -= loop;
+    return offset;
+  }
+
+  function applyPuzzleTransform(state){
+    if(!state?.el) return;
+    state.el.style.transform = `translateX(${state.offset || 0}px)`;
+  }
+
+  function ensurePuzzleTicker(){
+    if(puzzleTicker !== null) return;
+    puzzleLastTick = performance.now();
+    const step = (now)=>{
+      const dt = Math.max(0, (now - puzzleLastTick) / 1000);
+      puzzleLastTick = now;
+      PUZZLE_SCROLLERS.forEach(state => {
+        if(!state || state.paused || state.dragging || !state.loop) return;
+        state.offset += (state.velocity || 0) * dt;
+        state.offset = wrapOffset(state.offset, state.loop);
+        applyPuzzleTransform(state);
+      });
+      puzzleTicker = requestAnimationFrame(step);
+    };
+    puzzleTicker = requestAnimationFrame(step);
+  }
+
+  function registerPuzzleTrack(track, loop, duration, direction = 'left'){
+    if(!track || !loop) return;
+    const dur = Math.max(duration || 1, 0.001);
+    const velocity = (direction === 'right' ? 1 : -1) * (loop / dur);
+    const existing = PUZZLE_SCROLLERS.get(track);
+    const state = existing || { el: track, offset: direction === 'right' ? -loop : 0 };
+    state.loop = loop;
+    state.velocity = velocity;
+    state.offset = wrapOffset(state.offset ?? 0, loop);
+    state.paused = false;
+    state.dragging = false;
+    PUZZLE_SCROLLERS.set(track, state);
+    applyPuzzleTransform(state);
+    ensurePuzzleTicker();
+  }
+
+  function initPuzzleHoverDrag(container){
+    if(!container || container.dataset.interactionsReady === '1') return;
+    const tracks = [...container.querySelectorAll('.puzzle-track')];
+    const getStates = () => tracks.map(t => PUZZLE_SCROLLERS.get(t)).filter(Boolean);
+    if(!getStates().length){
+      requestAnimationFrame(()=>initPuzzleHoverDrag(container));
+      return;
+    }
+
+    container.dataset.interactionsReady = '1';
+    let hovered = false;
+
+    const setPaused = (value)=>{
+      getStates().forEach(state => { state.paused = value; });
+    };
+
+    container.addEventListener('pointerenter', ()=>{
+      hovered = true;
+      setPaused(true);
+    });
+
+    container.addEventListener('pointerleave', ()=>{
+      hovered = false;
+      if(getStates().some(state => state.dragging)) return;
+      setPaused(false);
+    });
+
+    container.addEventListener('pointerdown', (ev)=>{
+      if(ev.button !== 0) return;
+      if(ev.pointerType === 'mouse') ev.preventDefault();
+      hovered = true;
+      setPaused(true);
+      container.classList.add('is-dragging');
+      const states = getStates();
+      states.forEach(state => {
+        state.dragging = true;
+        state.paused = true;
+        state.startX = ev.clientX;
+        state.startOffset = state.offset;
+      });
+      try{ container.setPointerCapture(ev.pointerId); } catch {}
+    });
+
+    container.addEventListener('pointermove', (ev)=>{
+      const states = getStates();
+      states.forEach(state => {
+        if(!state.dragging) return;
+        const delta = ev.clientX - (state.startX || 0);
+        state.offset = wrapOffset((state.startOffset || 0) + delta, state.loop);
+        applyPuzzleTransform(state);
+      });
+    });
+
+    const release = (ev)=>{
+      const states = getStates();
+      if(!states.some(state => state.dragging)) return;
+      states.forEach(state => {
+        state.dragging = false;
+        state.startX = undefined;
+        state.startOffset = undefined;
+      });
+      container.classList.remove('is-dragging');
+      if(ev){ try{ container.releasePointerCapture(ev.pointerId); } catch {} }
+      if(!hovered) setPaused(false);
+    };
+
+    container.addEventListener('pointerup', release);
+    container.addEventListener('pointercancel', release);
+    container.addEventListener('lostpointercapture', release);
+  }
+
   (async function loadBlumePuzzle(){
     const track = document.getElementById('puzzleTrack');
     if(!track) return; // we're in detail mode
@@ -781,10 +903,10 @@ body.grain::before{
     requestAnimationFrame(()=>{
       const gap=parseFloat(getComputedStyle(track).gap||'0');
       const width=set1.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+      if(width<=0) return;
+      const duration=Math.max(35,Math.min(250,Math.round(width/75)));
       track.style.setProperty('--loop',`${width}px`);
-      const speed=Math.max(35,Math.min(250,Math.round(width/75)));
-      track.style.setProperty('--duration',`${speed}s`);
-      track.classList.add('run');
+      registerPuzzleTrack(track,width,duration,'left');
     });
 
     // third row
@@ -799,12 +921,17 @@ body.grain::before{
       requestAnimationFrame(()=>{
         const gap=parseFloat(getComputedStyle(track3).gap||'0');
         const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+        if(width<=0) return;
+        const duration=Math.max(35,Math.min(250,Math.round(width/75)));
         track3.style.setProperty('--loop',`${width}px`);
-        const speed=Math.max(35,Math.min(250,Math.round(width/75)));
-        track3.style.setProperty('--duration',`${speed}s`);
-        track3.classList.add('run','reverse');
+        registerPuzzleTrack(track3,width,duration,'right');
       });
     }
+
+    requestAnimationFrame(()=>{
+      const puzzleContainer = document.querySelector('.puzzle');
+      initPuzzleHoverDrag(puzzleContainer);
+    });
 
     // ✅ Pause off-screen videos
     const observer=new IntersectionObserver((entries)=>{
