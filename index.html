@@ -792,12 +792,16 @@ body.grain::before{
     if(!w || !h) return false;
     try{
       const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
+      const scale = 0.2;
+      const scaledW = Math.max(1, Math.round(w * scale));
+      const scaledH = Math.max(1, Math.round(h * scale));
+      canvas.width = scaledW;
+      canvas.height = scaledH;
       const ctx = canvas.getContext('2d');
       if(!ctx) return false;
-      ctx.drawImage(video, 0, 0, w, h);
+      ctx.drawImage(video, 0, 0, scaledW, scaledH);
       poster.src = canvas.toDataURL('image/jpeg', 0.85);
+      poster.dataset.captureScale = scale.toString();
       try{ video.setAttribute('poster', poster.src); }
       catch(err){ /* noop */ }
       poster.dataset.captured = '1';
@@ -1015,11 +1019,19 @@ body.grain::before{
       getStates().forEach(state => { state.paused = value; });
     };
 
-    const beginDrag = ()=>{
+    let capturedPointer = null;
+
+    const beginDrag = (pointerId)=>{
       if(dragActive) return;
       dragActive = true;
       container.classList.add('is-dragging');
       setPaused(true);
+      if(capturedPointer === null && typeof pointerId === 'number'){
+        try{
+          container.setPointerCapture(pointerId);
+          capturedPointer = pointerId;
+        } catch(err){ /* noop */ }
+      }
     };
 
     const finishDrag = ()=>{
@@ -1060,8 +1072,6 @@ body.grain::before{
         state.startX = ev.clientX;
         state.startOffset = state.offset;
       });
-      try{ container.setPointerCapture(ev.pointerId); }
-      catch(err){ /* noop */ }
     });
 
     container.addEventListener('pointermove', (ev)=>{
@@ -1076,7 +1086,7 @@ body.grain::before{
           state.dragCandidate = false;
           state.dragging = true;
           state.paused = true;
-          beginDrag();
+          beginDrag(ev.pointerId);
         }
         if(state.dragging){
           state.offset = wrapOffset((state.startOffset || 0) + delta, state.loop);
@@ -1100,8 +1110,11 @@ body.grain::before{
         state.startOffset = undefined;
       });
       if(ev){
-        try{ container.releasePointerCapture(ev.pointerId); }
-        catch(err){ /* noop */ }
+        if(capturedPointer !== null){
+          try{ container.releasePointerCapture(capturedPointer); }
+          catch(err){ /* noop */ }
+          capturedPointer = null;
+        }
       }
       if(pointerIsFine(ev)){
         if(hovered){
@@ -1114,7 +1127,7 @@ body.grain::before{
         container.classList.remove('is-hovered');
         resetSpot();
       }
-      if(wasDragging || dragActive){
+      if(wasDragging){
         finishDrag();
         suppressClick = true;
         setTimeout(()=>{ suppressClick = false; }, 0);
