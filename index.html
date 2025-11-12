@@ -1235,8 +1235,20 @@ body.grain::before{
     preparePuzzleVideos(track);
 
     requestAnimationFrame(()=>{
-      const gap=parseFloat(getComputedStyle(track).gap||'0');
-      const width=set1.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+      const styles=getComputedStyle(track);
+      const gap=parseFloat(styles.gap||'0');
+      const first=set1[0];
+      const loopStart=track.children[set1.length];
+      let width=0;
+      if(first&&loopStart){
+        const rectFirst=first.getBoundingClientRect();
+        const rectLoop=loopStart.getBoundingClientRect();
+        width=Math.round(rectLoop.left-rectFirst.left);
+      }
+      if(width<=0){
+        const gapCount=Math.max(0,set1.length-1);
+        width=set1.reduce((w,el)=>w+el.getBoundingClientRect().width,0)+gap*gapCount;
+      }
       if(width<=0) return;
       const duration=Math.max(35,Math.min(250,Math.round(width/75)));
       track.style.setProperty('--loop',`${width}px`);
@@ -1254,8 +1266,20 @@ body.grain::before{
       track3.innerHTML=''; setA.concat(setB).forEach(el=>track3.appendChild(el));
       preparePuzzleVideos(track3);
       requestAnimationFrame(()=>{
-        const gap=parseFloat(getComputedStyle(track3).gap||'0');
-        const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
+        const styles=getComputedStyle(track3);
+        const gap=parseFloat(styles.gap||'0');
+        const first=setA[0];
+        const loopStart=track3.children[setA.length];
+        let width=0;
+        if(first&&loopStart){
+          const rectFirst=first.getBoundingClientRect();
+          const rectLoop=loopStart.getBoundingClientRect();
+          width=Math.round(rectLoop.left-rectFirst.left);
+        }
+        if(width<=0){
+          const gapCount=Math.max(0,setA.length-1);
+          width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width,0)+gap*gapCount;
+        }
         if(width<=0) return;
         const duration=Math.max(35,Math.min(250,Math.round(width/75)));
         track3.style.setProperty('--loop',`${width}px`);
