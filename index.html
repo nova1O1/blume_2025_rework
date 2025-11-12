@@ -120,8 +120,8 @@ body.grain::before{
     .tile{position:relative; overflow:hidden; border-radius:0.9rem; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); box-shadow:0 18px 45px -35px rgba(0,0,0,0.85); transition:transform .55s cubic-bezier(.22,.61,.36,1), box-shadow .55s cubic-bezier(.22,.61,.36,1), border-color .45s ease, background .45s ease; outline:none; --tile-spot-x:50%; --tile-spot-y:50%; --tile-spot-opacity:0; --tile-spot-size:52%;}
     .tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg, rgba(255,106,0,0.16), transparent 45%);opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;z-index:2;pointer-events:none;}
     .tile::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:1;background:radial-gradient(circle at var(--tile-spot-x,50%) var(--tile-spot-y,50%), rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.32) 20%, rgba(255,255,255,0.14) 36%, transparent var(--tile-spot-size,52%));opacity:var(--tile-spot-opacity,0);mix-blend-mode:screen;filter:blur(24px);transition:opacity .45s ease;}
-    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,.61,.36,1), filter .6s cubic-bezier(.22,.61,.36,1);}
-    .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1); z-index:0; pointer-events:none;}
+    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,.61,.36,1), filter .6s cubic-bezier(.22,.61,.36,1); pointer-events:none; user-select:none; -webkit-user-drag:none; user-drag:none;}
+    .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1); z-index:0;}
     .tile > .absolute{pointer-events:none;}
     .tile.video-prepped video{opacity:0;}
     .tile.video-playing video{opacity:1;}
@@ -819,6 +819,7 @@ body.grain::before{
     if(!tile) return;
     PREPPED_TILE_VIDEOS.add(video);
     tile.classList.add('video-prepped');
+    video.draggable = false;
 
     let poster = tile.querySelector('.tile-poster');
     if(!poster){
@@ -826,9 +827,12 @@ body.grain::before{
       poster.className = 'tile-poster';
       poster.alt = '';
       poster.setAttribute('aria-hidden', 'true');
+      poster.draggable = false;
       if(video.parentNode){
         video.parentNode.insertBefore(poster, video);
       }
+    } else {
+      poster.draggable = false;
     }
 
     const ensurePoster = ()=>{
@@ -878,6 +882,9 @@ body.grain::before{
     }
 
     container.dataset.interactionsReady = '1';
+    container.addEventListener('dragstart', (ev)=>{
+      ev.preventDefault();
+    });
     let hovered = false;
     let activeTile = null;
     let dragActive = false;
@@ -1179,11 +1186,12 @@ body.grain::before{
       a.className='tile group';
       a.style.gridColumn = `span ${w}`;
       a.style.gridRow    = `span ${Math.min(h,2)}`;
+      a.draggable = false;
 
       const isVid = VIDEO_EXTS.has(extOf(src));
       a.innerHTML = isVid
-        ? `<img class="tile-poster" alt="" aria-hidden="true" /><video preload="auto" autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
-        : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
+        ? `<img class="tile-poster" alt="" aria-hidden="true" draggable="false" /><video preload="auto" autoplay muted loop playsinline draggable="false"><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
+        : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}" draggable="false"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
       return a;
     }
 
