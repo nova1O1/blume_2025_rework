@@ -121,7 +121,12 @@ body.grain::before{
     .tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg, rgba(255,106,0,0.16), transparent 45%);opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;z-index:2;pointer-events:none;}
     .tile::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:1;background:radial-gradient(circle at var(--tile-spot-x,50%) var(--tile-spot-y,50%), rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.32) 20%, rgba(255,255,255,0.14) 36%, transparent var(--tile-spot-size,52%));opacity:var(--tile-spot-opacity,0);mix-blend-mode:screen;filter:blur(24px);transition:opacity .45s ease;}
     .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,.61,.36,1), filter .6s cubic-bezier(.22,.61,.36,1);}
-    .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1);}
+    .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1); z-index:0;}
+    .tile.video-prepped video{opacity:0;}
+    .tile.video-playing video{opacity:1;}
+    .tile .tile-poster{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; opacity:0; transition:opacity .45s ease; background:#111; pointer-events:none;}
+    .tile.video-prepped .tile-poster{opacity:1;}
+    .tile.video-playing .tile-poster{opacity:0;}
     .tile:hover img, .tile:focus-visible img{transform:scale(1.08); filter:brightness(1.1);}
     .tile:hover video, .tile:focus-visible video{transform:scale(1.05);}
     .tile:hover{transform:translateY(-6px) scale(1.025); box-shadow:0 30px 60px -35px rgba(0,0,0,0.9), 0 18px 35px -24px rgba(255,106,0,0.25); border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.08);}
@@ -778,6 +783,86 @@ body.grain::before{
     ensurePuzzleTicker();
   }
 
+  const PREPPED_TILE_VIDEOS = new WeakSet();
+
+  function captureTilePoster(video, poster){
+    if(!video || !poster) return false;
+    const w = video.videoWidth;
+    const h = video.videoHeight;
+    if(!w || !h) return false;
+    try{
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if(!ctx) return false;
+      ctx.drawImage(video, 0, 0, w, h);
+      poster.src = canvas.toDataURL('image/jpeg', 0.85);
+      try{ video.setAttribute('poster', poster.src); }
+      catch(err){ /* noop */ }
+      poster.dataset.captured = '1';
+      return true;
+    } catch(err){
+      console.warn('Failed to capture puzzle tile poster', err);
+      return false;
+    }
+  }
+
+  function prepareTileVideo(video){
+    if(!video || PREPPED_TILE_VIDEOS.has(video)) return;
+    const tile = video.closest('.tile');
+    if(!tile) return;
+    PREPPED_TILE_VIDEOS.add(video);
+    tile.classList.add('video-prepped');
+
+    let poster = tile.querySelector('.tile-poster');
+    if(!poster){
+      poster = document.createElement('img');
+      poster.className = 'tile-poster';
+      poster.alt = '';
+      poster.setAttribute('aria-hidden', 'true');
+      if(video.parentNode){
+        video.parentNode.insertBefore(poster, video);
+      }
+    }
+
+    const ensurePoster = ()=>{
+      if(!poster || poster.dataset.captured === '1') return true;
+      return captureTilePoster(video, poster);
+    };
+
+    const handlePlaying = ()=>{
+      ensurePoster();
+      tile.classList.add('video-playing');
+      tile.classList.remove('video-prepped');
+      video.removeEventListener('playing', handlePlaying);
+    };
+
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('timeupdate', handlePlaying, { once:true });
+
+    const onLoaded = ()=>{
+      ensurePoster();
+      try{ video.play().catch(()=>{}); }
+      catch(err){ console.warn('Puzzle tile video playback failed to start', err); }
+    };
+
+    if(video.readyState >= 2){
+      ensurePoster();
+      requestAnimationFrame(onLoaded);
+    } else {
+      video.addEventListener('loadeddata', onLoaded, { once:true });
+    }
+  }
+
+  function preparePuzzleVideos(root){
+    const isElement = typeof Element !== 'undefined' && root instanceof Element;
+    const isFragment = typeof DocumentFragment !== 'undefined' && root instanceof DocumentFragment;
+    const scope = (isElement || isFragment) ? root : document;
+    const selector = scope === document ? '.puzzle .tile video' : '.tile video';
+    scope.querySelectorAll(selector).forEach(prepareTileVideo);
+  }
+
   function initPuzzleHoverDrag(container){
     if(!container || container.dataset.interactionsReady === '1') return;
     const tracks = [...container.querySelectorAll('.puzzle-track')];
@@ -790,6 +875,9 @@ body.grain::before{
     container.dataset.interactionsReady = '1';
     let hovered = false;
     let activeTile = null;
+    let dragActive = false;
+    let suppressClick = false;
+    const DRAG_THRESHOLD = 6;
     const pointerIsFine = ev => !ev || ev.pointerType === '' || ev.pointerType === 'mouse' || ev.pointerType === 'pen';
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
     const spot = {
@@ -927,6 +1015,20 @@ body.grain::before{
       getStates().forEach(state => { state.paused = value; });
     };
 
+    const beginDrag = ()=>{
+      if(dragActive) return;
+      dragActive = true;
+      container.classList.add('is-dragging');
+      setPaused(true);
+    };
+
+    const finishDrag = ()=>{
+      if(!dragActive) return;
+      dragActive = false;
+      container.classList.remove('is-dragging');
+      setPaused(false);
+    };
+
     container.addEventListener('pointerenter', (ev)=>{
       hovered = true;
       if(pointerIsFine(ev)){
@@ -939,51 +1041,68 @@ body.grain::before{
       hovered = false;
       container.classList.remove('is-hovered');
       if(pointerIsFine(ev)) resetSpot();
-      if(getStates().some(state => state.dragging)) return;
+      if(dragActive || getStates().some(state => state?.dragging)) return;
       setPaused(false);
     });
 
     container.addEventListener('pointerdown', (ev)=>{
       if(ev.button !== 0) return;
-      if(ev.pointerType === 'mouse') ev.preventDefault();
       hovered = true;
-      setPaused(true);
-      container.classList.add('is-dragging');
+      dragActive = false;
       if(pointerIsFine(ev)){
         container.classList.add('is-hovered');
         updateSpotFromPointer(ev);
       }
       const states = getStates();
       states.forEach(state => {
-        state.dragging = true;
-        state.paused = true;
+        state.dragging = false;
+        state.dragCandidate = true;
         state.startX = ev.clientX;
         state.startOffset = state.offset;
       });
-      try{ container.setPointerCapture(ev.pointerId); } catch {}
+      try{ container.setPointerCapture(ev.pointerId); }
+      catch(err){ /* noop */ }
     });
 
     container.addEventListener('pointermove', (ev)=>{
       updateSpotFromPointer(ev);
       const states = getStates();
+      let isDragging = false;
       states.forEach(state => {
-        if(!state.dragging) return;
-        const delta = ev.clientX - (state.startX || 0);
-        state.offset = wrapOffset((state.startOffset || 0) + delta, state.loop);
-        applyPuzzleTransform(state);
+        if(!state) return;
+        const startX = state.startX ?? ev.clientX;
+        const delta = ev.clientX - startX;
+        if(state.dragCandidate && Math.abs(delta) > DRAG_THRESHOLD){
+          state.dragCandidate = false;
+          state.dragging = true;
+          state.paused = true;
+          beginDrag();
+        }
+        if(state.dragging){
+          state.offset = wrapOffset((state.startOffset || 0) + delta, state.loop);
+          applyPuzzleTransform(state);
+          isDragging = true;
+        }
       });
+      if(isDragging && ev.pointerType === 'mouse'){
+        ev.preventDefault();
+      }
     });
 
     const release = (ev)=>{
       const states = getStates();
-      if(!states.some(state => state.dragging)) return;
+      const wasDragging = states.some(state => state?.dragging);
       states.forEach(state => {
+        if(!state) return;
         state.dragging = false;
+        state.dragCandidate = false;
         state.startX = undefined;
         state.startOffset = undefined;
       });
-      container.classList.remove('is-dragging');
-      if(ev){ try{ container.releasePointerCapture(ev.pointerId); } catch {} }
+      if(ev){
+        try{ container.releasePointerCapture(ev.pointerId); }
+        catch(err){ /* noop */ }
+      }
       if(pointerIsFine(ev)){
         if(hovered){
           updateSpotFromPointer(ev);
@@ -995,12 +1114,22 @@ body.grain::before{
         container.classList.remove('is-hovered');
         resetSpot();
       }
-      setPaused(false);
+      if(wasDragging || dragActive){
+        finishDrag();
+        suppressClick = true;
+        setTimeout(()=>{ suppressClick = false; }, 0);
+      }
     };
 
     container.addEventListener('pointerup', release);
     container.addEventListener('pointercancel', release);
     container.addEventListener('lostpointercapture', release);
+
+    container.addEventListener('click', (ev)=>{
+      if(!suppressClick) return;
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+    }, true);
   }
 
   (async function loadBlumePuzzle(){
@@ -1010,7 +1139,7 @@ body.grain::before{
     function fromInline(){
       const el = document.getElementById('artworks-data');
       try{ const d = JSON.parse(el.textContent||'{}'); return d.projects||[]; }
-      catch{ return []; }
+      catch(err){ return []; }
     }
 
     let projects = fromInline();
@@ -1039,7 +1168,7 @@ body.grain::before{
 
       const isVid = VIDEO_EXTS.has(extOf(src));
       a.innerHTML = isVid
-        ? `<video autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
+        ? `<img class="tile-poster" alt="" aria-hidden="true" /><video preload="auto" autoplay muted loop playsinline><source src="${src}" type="video/${extOf(src)}"/></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
         : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
       return a;
     }
@@ -1081,6 +1210,7 @@ body.grain::before{
     const set1=seq.map((t,i)=>buildTile(t.src,i,t.span[0],t.span[1],t.link));
     const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1],t.link));
     set1.concat(set2).forEach(el=>track.appendChild(el));
+    preparePuzzleVideos(track);
 
     requestAnimationFrame(()=>{
       const gap=parseFloat(getComputedStyle(track).gap||'0');
@@ -1100,6 +1230,7 @@ body.grain::before{
       const setA=seq3.map((t,i)=>buildTile(t.src,i,t.w,1,t.link));
       const setB=seq3.map((t,i)=>buildTile(t.src,i+setA.length,t.w,1,t.link));
       track3.innerHTML=''; setA.concat(setB).forEach(el=>track3.appendChild(el));
+      preparePuzzleVideos(track3);
       requestAnimationFrame(()=>{
         const gap=parseFloat(getComputedStyle(track3).gap||'0');
         const width=setA.reduce((w,el)=>w+el.getBoundingClientRect().width+gap,0);
