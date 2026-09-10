@@ -73,8 +73,28 @@ body.grain::before{
     header,section,footer{position:relative;z-index:1}
 
     /* ====== Puzzle River ====== */
-.puzzle{position:relative}
-.puzzle::after{content:"";position:absolute;inset:0;pointer-events:none;}
+.puzzle{
+  position:relative;
+  cursor:grab;
+  touch-action:pan-y;
+  transition:transform .45s ease;
+}
+.puzzle.is-dragging{cursor:grabbing;}
+.puzzle::after{content:"";position:absolute;inset:-1px;pointer-events:none;}
+.puzzle::after{
+  z-index:2;
+  background:
+    linear-gradient(90deg, rgba(12,12,12,0.95), rgba(12,12,12,0) 12%, rgba(12,12,12,0) 88%, rgba(12,12,12,0.95)),
+    linear-gradient(180deg, rgba(0,0,0,0.38), rgba(0,0,0,0));
+  opacity:.85;
+  mix-blend-mode:multiply;
+  transition:opacity .4s ease;
+}
+.puzzle.is-hovered .puzzle-track{filter:saturate(1.08) brightness(1.04);}
+.puzzle.is-dragging .puzzle-track{filter:saturate(1.12) brightness(1.05);}
+.puzzle.is-dragging::after{opacity:.7;}
+@media (prefers-reduced-motion: reduce){ .tile::after{display:none;} }
+@media (pointer: coarse){ .tile::after{display:none;} }
 
 /* Smaller tiles + tighter gap on mobile, scale up at md+ */
 .puzzle-track{
@@ -82,6 +102,9 @@ body.grain::before{
   grid-auto-flow:column dense;
   align-items:stretch;
   gap:var(--gap, .5rem);                                /* was .75rem */
+  position:relative;
+  z-index:1;
+  transition:filter .6s ease;
 
   /* mobile-friendly sizes (auto-scale by viewport) */
   --rowH: clamp(9rem, 26vw, 12rem);                     /* was 14rem */
@@ -89,19 +112,28 @@ body.grain::before{
 
   grid-template-rows: repeat(2, var(--rowH));
   grid-auto-columns: var(--colW);
+  user-select:none;
 }
     @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
 
-    .tile{position:relative; overflow:hidden; border-radius:0.75rem; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05)}
-    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
-    .tile video{opacity:1; transition:opacity .35s ease}
-    .tile:hover img{transform:scale(1.06); filter:brightness(1.15)}
-    .tile img{transition:transform .3s ease, filter .3s ease}
+    .tile{position:relative; overflow:hidden; border-radius:0.9rem; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); box-shadow:0 18px 45px -35px rgba(0,0,0,0.85); transition:transform .55s cubic-bezier(.22,.61,.36,1), box-shadow .55s cubic-bezier(.22,.61,.36,1), border-color .45s ease, background .45s ease; outline:none; --tile-spot-x:50%; --tile-spot-y:50%; --tile-spot-opacity:0; --tile-spot-size:52%;}
+    .tile::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg, rgba(255,106,0,0.16), transparent 45%);opacity:0;transition:opacity .5s ease;mix-blend-mode:screen;z-index:2;pointer-events:none;}
+    .tile::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:1;background:radial-gradient(circle at var(--tile-spot-x,50%) var(--tile-spot-y,50%), rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.32) 20%, rgba(255,255,255,0.14) 36%, transparent var(--tile-spot-size,52%));opacity:var(--tile-spot-opacity,0);mix-blend-mode:screen;filter:blur(24px);transition:opacity .45s ease;}
+    .tile img, .tile video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,.61,.36,1), filter .6s cubic-bezier(.22,.61,.36,1); pointer-events:none; user-select:none; -webkit-user-drag:none; user-drag:none;}
+    .tile video{opacity:1; transition:opacity .35s ease, transform .6s cubic-bezier(.22,.61,.36,1); z-index:0;}
+    .tile > .absolute{pointer-events:none;}
+    .tile:hover img, .tile:focus-visible img{transform:scale(1.08); filter:brightness(1.1);}
+    .tile:hover video, .tile:focus-visible video{transform:scale(1.05);}
+    .tile:hover{transform:translateY(-6px) scale(1.025); box-shadow:0 30px 60px -35px rgba(0,0,0,0.9), 0 18px 35px -24px rgba(255,106,0,0.25); border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.08);}
+    .tile:hover::before, .tile:focus-visible::before{opacity:1;}
+    .tile:focus-visible{transform:translateY(-4px) scale(1.015); box-shadow:0 28px 55px -38px rgba(0,0,0,0.88), 0 16px 30px -24px rgba(255,106,0,0.3); border-color:rgba(255,255,255,0.35); outline:2px solid rgba(255,106,0,0.55); outline-offset:4px;}
+    .puzzle.is-dragging .tile{transition:transform .15s linear, box-shadow .2s ease;}
 
     .run{animation:puzzle-scroll var(--duration, 70s) linear infinite}
     .reverse{animation-direction:reverse}
+    .logo-track.reverse{animation-direction:reverse}
     .media-paused .run, .media-paused .logo-track, .gallery-paused .run{animation-play-state:paused}
     @media(prefers-reduced-motion:reduce){
       .run, .logo-track{animation:none !important}
@@ -122,11 +154,13 @@ body.grain::before{
     /* ===== Redesigned Logo Marquee (mobile-large & seamless) ===== */
     .logo-marquee{
       --gap: clamp(1.5rem, 6vw, 4.5rem);
-      --row-h: clamp(140px, 38vw, 200px);  /* BIG on phones, capped on desktop */
+      --row-h: clamp(120px, 32vw, 180px);  /* Slightly shorter to stack two rows */
       --duration: 45s;
       overflow:hidden;
       position:relative;
       padding: 1.25rem 0;
+      display:grid;
+      gap: clamp(1.25rem, 4vw, 2.5rem);
     }
      /* Turn off flex gap; width now includes padding */
     .logo-track{
@@ -229,7 +263,8 @@ body.grain::before{
     <!-- full-width marquee -->
     <div class="mt-8 w-full">
       <div class="logo-marquee relative">
-        <div class="logo-track will-change-transform" id="logoTrack"></div>
+        <div class="logo-track will-change-transform" id="logoTrackTop"></div>
+        <div class="logo-track will-change-transform reverse" id="logoTrackBottom"></div>
       </div>
     </div>
   </section>
@@ -433,14 +468,13 @@ body.grain::before{
 
   <!-- Logos: seamless marquee loader -->
   <script>
-    // measure width of first row and set --loop to match
-    function measureAndSetLoop() {
-      const el = document.getElementById('logoTrack');
-      if (!el) return;
-      const firstBatch = [...el.querySelectorAll('[data-batch="A"]')];
+    // measure width of first batch per row and set --loop to match
+    function measureAndSetLoop(track) {
+      if (!track) return;
+      const firstBatch = [...track.querySelectorAll('[data-batch="A"]')];
       if (!firstBatch.length) return;
 
-      const gapStr = getComputedStyle(el).gap || getComputedStyle(el).columnGap || '0px';
+      const gapStr = getComputedStyle(track).gap || getComputedStyle(track).columnGap || '0px';
       const gap = parseFloat(gapStr) || 0;
 
       const width = firstBatch.reduce((sum, node, i) => {
@@ -448,14 +482,16 @@ body.grain::before{
         return sum + w + (i < firstBatch.length - 1 ? gap : 0);
       }, 0);
 
-      el.style.setProperty('--loop', `${Math.ceil(width)}px`);
-      el.style.animation = 'none';
-      requestAnimationFrame(() => { el.style.animation = ''; });
+      track.style.setProperty('--loop', `${Math.ceil(width)}px`);
+      track.style.animation = 'none';
+      requestAnimationFrame(() => { track.style.animation = ''; });
     }
 
     (function initClients(){
-      const el = document.getElementById('logoTrack');
-      if (!el) return;
+      const marquee = document.querySelector('.logo-marquee');
+      if (!marquee) return;
+      const tracks = [...marquee.querySelectorAll('.logo-track')];
+      if (!tracks.length) return;
 
       const logos = [
           // …your existing logos…
@@ -482,10 +518,10 @@ body.grain::before{
 },
 ];
 
-      function buildRow(batchAttr) {
+      function buildRow(source, batchAttr) {
         const frag = document.createDocumentFragment();
         const images = [];
-        logos.forEach(l => {
+        source.forEach(l => {
           const a = document.createElement('a');
           a.href = l.href; a.target = '_blank'; a.rel = 'noopener';
           a.className = 'logo-link';                   // <-- important for min-width
@@ -506,32 +542,37 @@ body.grain::before{
         return { frag, images };
       }
 
-      // Build two copies (A + B) for seamless loop
-      el.innerHTML = '';
-      const A = buildRow('A');
-      const B = buildRow('B');
-      el.appendChild(A.frag);
-      el.appendChild(B.frag);
+      const rows = [[], []];
+      logos.forEach((logo, idx) => rows[idx % 2].push(logo));
+      if (!rows[1].length) rows[1] = [...rows[0]];
 
-      const decodePromises = A.images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
-      Promise.all(decodePromises).then(() => {
-        measureAndSetLoop();
-        window.addEventListener('load', measureAndSetLoop, { once:true });
-      });
+      function setupTrack(track, source) {
+        track.innerHTML = '';
+        const A = buildRow(source, 'A');
+        const B = buildRow(source, 'B');
+        track.appendChild(A.frag);
+        track.appendChild(B.frag);
 
-      // Pause on hover; respect reduced motion
-      const marquee = el.closest('.logo-marquee');
-      //marquee.addEventListener('mouseenter', () => { el.style.animationPlayState = 'paused'; });
-      //marquee.addEventListener('mouseleave', () => { el.style.animationPlayState = 'running'; });
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        el.style.animation = 'none';
+        const decodePromises = A.images.map(img => img.decode ? img.decode().catch(()=>{}) : Promise.resolve());
+        return Promise.all(decodePromises).then(() => measureAndSetLoop(track));
       }
 
-      // Recalculate on resize/orientation
+      Promise.all(tracks.map((track, idx) => setupTrack(track, rows[idx % rows.length]))).then(() => {
+        if (document.readyState === 'complete') {
+          tracks.forEach(measureAndSetLoop);
+        } else {
+          window.addEventListener('load', () => tracks.forEach(measureAndSetLoop), { once:true });
+        }
+      });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        tracks.forEach(track => track.style.animation = 'none');
+      }
+
       let t;
       window.addEventListener('resize', () => {
         clearTimeout(t);
-        t = setTimeout(measureAndSetLoop, 150);
+        t = setTimeout(() => tracks.forEach(measureAndSetLoop), 150);
       });
     })();
   </script>
@@ -635,6 +676,345 @@ body.grain::before{
   /* =========================
      Puzzle River Loader + Video Culling
   ==========================*/
+  const PUZZLE_SCROLLERS = new Map();
+  let puzzleTicker = null;
+  let puzzleLastTick = 0;
+  let puzzleVisible = false;
+  const puzzleMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const canScrollPuzzle = state => state.el.isConnected && puzzleVisible &&
+    !document.hidden && !puzzleMotion.matches && !state.paused && !state.dragging && state.loop;
+  document.addEventListener('visibilitychange', () => ensurePuzzleTicker());
+  puzzleMotion.addEventListener('change', () => ensurePuzzleTicker());
+
+  function wrapOffset(offset, loop){
+    if(!loop) return offset;
+    return -(((-offset % loop) + loop) % loop);
+  }
+
+  function applyPuzzleTransform(state){
+    if(!state?.el) return;
+    state.el.style.transform = `translateX(${state.offset || 0}px)`;
+  }
+
+  function ensurePuzzleTicker(){
+    if(puzzleTicker !== null || ![...PUZZLE_SCROLLERS.values()].some(canScrollPuzzle)) return;
+    puzzleLastTick = performance.now();
+    const step = (now)=>{
+      puzzleTicker = null;
+      const dt = Math.min(0.05, Math.max(0, (now - puzzleLastTick) / 1000));
+      puzzleLastTick = now;
+      PUZZLE_SCROLLERS.forEach(state => {
+        if(!canScrollPuzzle(state)) return;
+        state.offset += (state.velocity || 0) * dt;
+        state.offset = wrapOffset(state.offset, state.loop);
+        applyPuzzleTransform(state);
+      });
+      if ([...PUZZLE_SCROLLERS.values()].some(canScrollPuzzle)) {
+        puzzleTicker = requestAnimationFrame(step);
+      }
+    };
+    puzzleTicker = requestAnimationFrame(step);
+  }
+
+  function registerPuzzleTrack(track, loop, duration, direction = 'left'){
+    if(!track || !loop) return;
+    const dur = Math.max(duration || 1, 0.001);
+    const velocity = (direction === 'right' ? 1 : -1) * (loop / dur);
+    const existing = PUZZLE_SCROLLERS.get(track);
+    const state = existing || { el: track, offset: direction === 'right' ? -loop : 0 };
+    if (existing?.loop && existing.loop !== loop) state.offset *= loop / existing.loop;
+    state.loop = loop;
+    state.velocity = velocity;
+    state.offset = wrapOffset(state.offset ?? 0, loop);
+    state.paused ??= false;
+    state.dragging ??= false;
+    PUZZLE_SCROLLERS.set(track, state);
+    applyPuzzleTransform(state);
+    ensurePuzzleTicker();
+  }
+
+  function initPuzzleHoverDrag(container){
+    if(!container || container.dataset.interactionsReady === '1') return;
+    const tracks = [...container.querySelectorAll('.puzzle-track')];
+    const getStates = () => tracks.map(t => PUZZLE_SCROLLERS.get(t)).filter(Boolean);
+    if(!getStates().length){
+      requestAnimationFrame(()=>initPuzzleHoverDrag(container));
+      return;
+    }
+
+    container.dataset.interactionsReady = '1';
+    container.addEventListener('dragstart', (ev)=>{
+      ev.preventDefault();
+    });
+    let hovered = false;
+    let activeTile = null;
+    let dragActive = false;
+    let suppressClick = false;
+    const DRAG_THRESHOLD = 6;
+    const pointerIsFine = ev => !ev || ev.pointerType === '' || ev.pointerType === 'mouse' || ev.pointerType === 'pen';
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const spot = {
+      x:50,
+      y:50,
+      size:52,
+      opacity:0,
+      targetX:50,
+      targetY:50,
+      targetSize:52,
+      targetOpacity:0,
+      raf:null
+    };
+    const applySpot = ()=>{
+      if(!activeTile) return;
+      activeTile.style.setProperty('--tile-spot-x', `${spot.x}%`);
+      activeTile.style.setProperty('--tile-spot-y', `${spot.y}%`);
+      activeTile.style.setProperty('--tile-spot-size', `${spot.size}%`);
+      activeTile.style.setProperty('--tile-spot-opacity', `${spot.opacity}`);
+    };
+    const deactivateTile = (tile)=>{
+      if(!tile) return;
+      tile.classList.remove('is-spotlit');
+      tile.style.setProperty('--tile-spot-opacity','0');
+      tile.style.removeProperty('--tile-spot-x');
+      tile.style.removeProperty('--tile-spot-y');
+      tile.style.removeProperty('--tile-spot-size');
+    };
+    const clearActiveTile = ()=>{
+      if(!activeTile) return;
+      deactivateTile(activeTile);
+      activeTile = null;
+    };
+    const activateTile = (tile, initialX, initialY)=>{
+      if(activeTile === tile) return;
+      if(activeTile && activeTile !== tile){
+        deactivateTile(activeTile);
+      }
+      activeTile = tile;
+      if(activeTile){
+        activeTile.classList.add('is-spotlit');
+        if(typeof initialX === 'number'){
+          spot.x = initialX;
+          spot.targetX = initialX;
+        }
+        if(typeof initialY === 'number'){
+          spot.y = initialY;
+          spot.targetY = initialY;
+        }
+        spot.size = 52;
+        spot.opacity = 0;
+        spot.targetSize = 52;
+        spot.targetOpacity = 0;
+        applySpot();
+      }
+    };
+    const animateSpot = ()=>{
+      if(!activeTile){
+        spot.raf = null;
+        return;
+      }
+      const ease = 0.18;
+      spot.x += (spot.targetX - spot.x) * ease;
+      spot.y += (spot.targetY - spot.y) * ease;
+      spot.size += (spot.targetSize - spot.size) * ease;
+      spot.opacity += (spot.targetOpacity - spot.opacity) * ease;
+      const done = Math.abs(spot.x - spot.targetX) < 0.05 && Math.abs(spot.y - spot.targetY) < 0.05 && Math.abs(spot.size - spot.targetSize) < 0.15 && Math.abs(spot.opacity - spot.targetOpacity) < 0.01;
+      if(done){
+        spot.x = spot.targetX;
+        spot.y = spot.targetY;
+        spot.size = spot.targetSize;
+        spot.opacity = spot.targetOpacity;
+      }
+      applySpot();
+      if(!done){
+        spot.raf = requestAnimationFrame(animateSpot);
+      } else {
+        spot.raf = null;
+        if(spot.targetOpacity === 0){
+          clearActiveTile();
+        }
+      }
+    };
+    const kickSpot = ()=>{
+      if(!spot.raf){
+        spot.raf = requestAnimationFrame(animateSpot);
+      }
+    };
+    const setSpotTarget = (x, y, opacity, size)=>{
+      if(!activeTile) return;
+      spot.targetX = clamp(x, -10, 110);
+      spot.targetY = clamp(y, -10, 110);
+      spot.targetOpacity = Math.max(0, Math.min(0.7, opacity));
+      spot.targetSize = clamp(size, 38, 80);
+      kickSpot();
+    };
+    const resetSpot = ()=>{
+      if(!activeTile) return;
+      spot.targetOpacity = 0;
+      spot.targetSize = 56;
+      kickSpot();
+    };
+    const getTileFromPointer = (ev)=>{
+      if(!pointerIsFine(ev)) return null;
+      const base = ev.target && typeof ev.target.closest === 'function' ? ev.target.closest('.tile') : null;
+      if(base) return base;
+      if(typeof document !== 'undefined' && typeof ev.clientX === 'number' && typeof ev.clientY === 'number'){
+        const alt = document.elementFromPoint(ev.clientX, ev.clientY);
+        if(alt) return alt.closest('.tile');
+      }
+      return null;
+    };
+    const updateSpotFromPointer = (ev)=>{
+      if(!pointerIsFine(ev)) return;
+      const tile = getTileFromPointer(ev);
+      if(tile){
+        const rect = tile.getBoundingClientRect();
+        if(rect.width <= 0 || rect.height <= 0) return;
+        const x = ((ev.clientX - rect.left) / rect.width) * 100;
+        const y = ((ev.clientY - rect.top) / rect.height) * 100;
+        if(activeTile !== tile){
+          activateTile(tile, x, y);
+        }
+        const active = container.classList.contains('is-dragging');
+        const baseOpacity = active ? 0.28 : 0.42;
+        const baseSize = active ? 66 : 54;
+        setSpotTarget(x, y, baseOpacity, baseSize);
+      } else if(activeTile){
+        setSpotTarget(spot.x, spot.y, 0, 58);
+      }
+    };
+    applySpot();
+
+    const setPaused = (value)=>{
+      getStates().forEach(state => { state.paused = value; });
+      if (!value) ensurePuzzleTicker();
+    };
+
+    let capturedPointer = null;
+
+    const beginDrag = (pointerId)=>{
+      if(dragActive) return;
+      dragActive = true;
+      container.classList.add('is-dragging');
+      setPaused(true);
+      if(capturedPointer === null && typeof pointerId === 'number'){
+        try{
+          container.setPointerCapture(pointerId);
+          capturedPointer = pointerId;
+        } catch(err){ /* noop */ }
+      }
+    };
+
+    const finishDrag = ()=>{
+      if(!dragActive) return;
+      dragActive = false;
+      container.classList.remove('is-dragging');
+      setPaused(false);
+    };
+
+    container.addEventListener('pointerenter', (ev)=>{
+      hovered = true;
+      if(pointerIsFine(ev)){
+        container.classList.add('is-hovered');
+        updateSpotFromPointer(ev);
+      }
+    });
+
+    container.addEventListener('pointerleave', (ev)=>{
+      hovered = false;
+      container.classList.remove('is-hovered');
+      if(pointerIsFine(ev)) resetSpot();
+      if(dragActive || getStates().some(state => state?.dragging)) return;
+      setPaused(false);
+    });
+
+    container.addEventListener('pointerdown', (ev)=>{
+      if(ev.button !== 0) return;
+      hovered = true;
+      dragActive = false;
+      if(pointerIsFine(ev)){
+        container.classList.add('is-hovered');
+        updateSpotFromPointer(ev);
+      }
+      const states = getStates();
+      states.forEach(state => {
+        state.dragging = false;
+        state.dragCandidate = true;
+        state.startX = ev.clientX;
+        state.startOffset = state.offset;
+      });
+    });
+
+    container.addEventListener('pointermove', (ev)=>{
+      updateSpotFromPointer(ev);
+      const states = getStates();
+      let isDragging = false;
+      states.forEach(state => {
+        if(!state) return;
+        const startX = state.startX ?? ev.clientX;
+        const delta = ev.clientX - startX;
+        if(state.dragCandidate && Math.abs(delta) > DRAG_THRESHOLD){
+          state.dragCandidate = false;
+          state.dragging = true;
+          state.paused = true;
+          beginDrag(ev.pointerId);
+        }
+        if(state.dragging){
+          state.offset = wrapOffset((state.startOffset || 0) + delta, state.loop);
+          applyPuzzleTransform(state);
+          isDragging = true;
+        }
+      });
+      if(isDragging && ev.pointerType === 'mouse'){
+        ev.preventDefault();
+      }
+    });
+
+    const release = (ev)=>{
+      const states = getStates();
+      const wasDragging = states.some(state => state?.dragging);
+      states.forEach(state => {
+        if(!state) return;
+        state.dragging = false;
+        state.dragCandidate = false;
+        state.startX = undefined;
+        state.startOffset = undefined;
+      });
+      if(ev){
+        if(capturedPointer !== null){
+          try{ container.releasePointerCapture(capturedPointer); }
+          catch(err){ /* noop */ }
+          capturedPointer = null;
+        }
+      }
+      if(pointerIsFine(ev)){
+        if(hovered){
+          updateSpotFromPointer(ev);
+        } else {
+          container.classList.remove('is-hovered');
+          resetSpot();
+        }
+      } else if(!hovered){
+        container.classList.remove('is-hovered');
+        resetSpot();
+      }
+      if(wasDragging){
+        finishDrag();
+        suppressClick = true;
+        setTimeout(()=>{ suppressClick = false; }, 0);
+      }
+    };
+
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+    container.addEventListener('lostpointercapture', release);
+
+    container.addEventListener('click', (ev)=>{
+      if(!suppressClick) return;
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+    }, true);
+  }
+
   (async function loadBlumePuzzle(){
     const track = document.getElementById('puzzleTrack');
     if(!track || new URLSearchParams(location.search).get('art')?.endsWith('/')) return;
@@ -642,7 +1022,7 @@ body.grain::before{
     function fromInline(){
       const el = document.getElementById('artworks-data');
       try{ const d = JSON.parse(el.textContent||'{}'); return d.projects||[]; }
-      catch{ return []; }
+      catch(err){ return []; }
     }
 
     let projects = fromInline();
@@ -675,12 +1055,13 @@ body.grain::before{
       a.className='tile group';
       a.style.gridColumn = `span ${w}`;
       a.style.gridRow    = `span ${Math.min(h,2)}`;
+      a.draggable = false;
 
       const preview = previews[src];
       const isVid = !!preview || VIDEO_EXTS.has(extOf(src));
       a.innerHTML = isVid
-        ? `<video data-video-src="${preview?.src || src}" ${preview ? `poster="${preview.poster}"` : ''} muted loop playsinline preload="none"></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
-        : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
+        ? `<video data-video-src="${preview?.src || src}" ${preview ? `poster="${preview.poster}"` : ''} muted loop playsinline preload="none" draggable="false"></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
+        : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}" draggable="false"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
       return a;
     }
 
@@ -722,6 +1103,7 @@ body.grain::before{
     const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1],t.link));
     set1.concat(set2).forEach(el=>track.appendChild(el));
 
+
     // Explicit grid coordinates make each duplicated batch identical.
     const batchColumns = Math.max(...seq.map(t => t.col + t.span[0]));
     set1.concat(set2).forEach((tile, i) => {
@@ -734,8 +1116,7 @@ body.grain::before{
         const width = duplicate.offsetLeft - first.offsetLeft;
         element.style.setProperty('--loop', width + 'px');
         element.style.setProperty('--duration', Math.max(35, Math.round(width / 75)) + 's');
-        element.classList.add('run');
-        if (reverse) element.classList.add('reverse');
+        registerPuzzleTrack(element, width, Math.max(35, Math.round(width / 75)), reverse ? 'right' : 'left');
       };
       new ResizeObserver(measure).observe(element);
       requestAnimationFrame(measure);
@@ -754,10 +1135,14 @@ body.grain::before{
       measureTrack(track3, setA[0], setB[0], true);
     }
 
-    // Stop moving the gallery when it is outside the viewport.
+    requestAnimationFrame(() => initPuzzleHoverDrag(track.closest('.puzzle')));
+
+    // Stop the animation ticker entirely while the gallery is offscreen.
     const gallery = track.closest('.puzzle');
     new IntersectionObserver(([entry]) => {
-      gallery.classList.toggle('gallery-paused', !entry.isIntersecting);
+      puzzleVisible = entry.isIntersecting;
+      gallery.classList.toggle('gallery-paused', !puzzleVisible);
+      ensurePuzzleTicker();
     }).observe(gallery);
   })();
   </script>

@@ -20,6 +20,10 @@ disable automatic playback; project-page native controls allow manual playback.
 Gallery duplication preserves the scrolling effect without loading every video.
 Grid coordinates and measured duplicate offsets determine the loop distance,
 including after viewport resizing. Gallery motion pauses outside the viewport.
+The two logo rows, gallery drag gestures, and tile hover spotlight are retained.
+The gallery's JavaScript ticker stops while offscreen, in a hidden tab, or with
+reduced motion enabled. Dragging does not trigger project navigation; a regular
+click still opens the project. Generated posters replace runtime canvas capture.
 
 Serve the site over HTTP(S), including its new assets and manifest. Support byte
 range requests and correct video MIME types. Changing a UI framework is not
