@@ -1,15 +1,35 @@
 {
-  "title": "Cinematic Drop",
+  "title": "LEC: 2025 Winter Opener",
   "year": 2025,
-  "roles": [
-    "Direction", 
-    "3D", 
-    "Edit"
-  ],
-  "description": "2025 LEC Winter Opener A cinematic exploration mixing motion and code-driven worlds.",
+  "roles": ["Generalist", "3D", "Edit"],
+  "description": "A cinematic opener setting the tone for a new season of LEC competition.",
   "cover": "cover.webm",
   "assets": [
     "shot1.gif"
   ],
-  "link": "https://youtube.com/clip/Ugkx4OSntQ051FOA-l2WOsH9Y_XN4yt_bfql?si=nDA8hgEDceHnxnWYYouTube"
+  "link": "https://www.youtube.com/clip/Ugkx4OSntQ051FOA-l2WOsH9Y_XN4yt_bfql",
+  "category": "Esports / Season opener",
+  "overview": [
+    "A new season starts with anticipation: new rivalries, a fresh start and a trophy to chase. This opener brings that energy to the 2025 LEC Winter season through a fast-moving sequence of cinematic worlds.",
+    "Orange light, fractured environments and glowing trophy imagery carry the film toward its final LEC reveal. The contrast between scale, detail and movement gives the piece its momentum, building excitement before the competition begins."
+  ],
+  "linkLabel": "Watch the excerpt",
+  "stills": [
+    {
+      "src": "stills/frame-01.jpg",
+      "caption": "The trophy framed by orange light."
+    },
+    {
+      "src": "stills/frame-02.jpg",
+      "caption": "Fractured forms and reflections in motion."
+    },
+    {
+      "src": "stills/frame-03.jpg",
+      "caption": "A glowing arena built around the trophy."
+    },
+    {
+      "src": "stills/frame-04.jpg",
+      "caption": "The final LEC identity reveal."
+    }
+  ]
 }

@@ -1,15 +1,37 @@
 {
-  "title": "Project J",
-  "year": 2025,
+  "title": "G2: PROGRESS",
+  "year": 2023,
   "roles": [
-    "Direction",
+    "Generalist",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project J.",
+  "description": "A Counter-Strike hype film for G2 ahead of the BLAST Paris Major.",
   "cover": "cover.webm",
-  "assets": [
-    "shot1.jpg"
+  "assets": [],
+  "link": "https://www.youtube.com/watch?v=0W7yek9z8hE",
+  "category": "Esports / Major hype film",
+  "overview": [
+    "PROGRESS brings G2’s competitive energy into a cinematic Counter-Strike world. Created as a hype video for the BLAST Paris Major, the film builds anticipation around the team’s next challenge.",
+    "Slow-motion projectiles, close-up character shots and bold G2 imagery give the sequence its rhythm. Warm industrial scenes contrast with dark silhouettes and red accents, while floating banknotes and graphic transitions bring a playful edge to the action."
   ],
-  "link": "#"
+  "linkLabel": "Watch the full film",
+  "stills": [
+    {
+      "src": "stills/frame-01.jpg",
+      "caption": "The G2 identity in blue, white and red."
+    },
+    {
+      "src": "stills/frame-02.jpg",
+      "caption": "A projectile suspended in an industrial scene."
+    },
+    {
+      "src": "stills/frame-03.jpg",
+      "caption": "A character close-up against the sunlit city."
+    },
+    {
+      "src": "stills/frame-04.jpg",
+      "caption": "Floating banknotes frame the G2 reveal."
+    }
+  ]
 }

@@ -1,15 +1,37 @@
 {
-  "title": "Project K",
-  "year": 2025,
+  "title": "MLBB: Heroes Will Rise",
+  "year": 2024,
   "roles": [
-    "Direction",
+    "Generalist",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project K.",
+  "description": "The official music video for MLBB MSC 2024, bringing the spirit of competition into a world of heroes.",
   "cover": "cover.webm",
-  "assets": [
-    "shot1.jpg"
+  "assets": [],
+  "link": "https://blenderartists.org/t/heroes-will-rise-mlbb-msc-2024-official-music-video/1539235",
+  "category": "Esports / Official music video",
+  "overview": [
+    "Heroes Will Rise moves between live action and animated worlds to celebrate MLBB MSC 2024. Character moments, fantasy action and tournament imagery connect the journey of a player to the scale of the competition.",
+    "The production combines characters and animation created in Blender with shots rendered in Blender Cycles and Unreal Engine 5. These selected frames follow the shift from a dark, weightless space into a bright hero world and the final tournament stage. The linked production article includes the film and full crew credits."
   ],
-  "link": "#"
+  "linkLabel": "View film & production credits",
+  "stills": [
+    {
+      "src": "stills/frame-01.jpg",
+      "caption": "A weightless figure suspended in a dark world."
+    },
+    {
+      "src": "stills/frame-02.jpg",
+      "caption": "Golden armor and the arrival of a hero."
+    },
+    {
+      "src": "stills/frame-03.jpg",
+      "caption": "A character moment in the sunlit city."
+    },
+    {
+      "src": "stills/frame-04.jpg",
+      "caption": "The tournament trophy takes the stage."
+    }
+  ]
 }

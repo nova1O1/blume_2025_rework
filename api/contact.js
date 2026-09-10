@@ -30,8 +30,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, error: "Missing required fields." });
     }
 
-    const toEmail = process.env.TO_EMAIL || "hello@blume-visuals.com";
-    const subject = `New Blume Inquiry — ${name}${company ? ` @ ${company}` : ""}`;
+    const toEmail = process.env.TO_EMAIL || "alex@blume-visuals.com";
+    const subject = `New Blume Inquiry: ${name}${company ? ` @ ${company}` : ""}`;
     const text = [
       `Name: ${name}`,
       `Email: ${email}`,
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     ].filter(Boolean).join("\n");
 
     // Use Resend onboarding sender unless your domain is verified.
-    const fromAddress = process.env.FROM_EMAIL || "Blume <hello@blume-visuals.com>";
+    const fromAddress = process.env.FROM_EMAIL || "Blume <alex@blume-visuals.com>";
 
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: fromAddress,                // switch to "Blume <hello@blume-visuals.com>" after DNS verify
+        from: fromAddress,                // switch to "Blume <alex@blume-visuals.com>" after DNS verify
         to: [toEmail],
         subject,
         text,

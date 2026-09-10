@@ -1,15 +1,35 @@
 {
-  "title": "Project C",
-  "year": 2025,
-  "roles": [
-    "Direction",
-    "3D",
-    "Edit"
-  ],
-  "description": "Placeholder description for Project C.",
+  "title": "LEC: Our Drive",
+  "year": 2024,
+  "roles": ["Generalist", "3D", "Edit"],
+  "description": "An esports hype trailer building anticipation for the LEC Winter Split.",
   "cover": "cover.webm",
   "assets": [
     "shot1.gif"
   ],
-  "link": "#"
+  "link": "https://www.youtube.com/watch?v=qsVdq7EEaeQ",
+  "category": "Esports / Winter promo",
+  "overview": [
+    "Our Drive captures the ambition and competitive energy that come with the start of a new LEC season. Created as a promotional hype trailer, the film builds toward the return of the league and the rivalries waiting to unfold.",
+    "Neon-lit environments, close-up character moments and rapid transitions create a sense of forward motion. Green light and warm flashes of orange tie the sequence together, leading into the League of Legends EMEA Championship reveal."
+  ],
+  "linkLabel": "Watch the full film",
+  "stills": [
+    {
+      "src": "stills/frame-01.jpg",
+      "caption": "A figure steps into the neon-lit world."
+    },
+    {
+      "src": "stills/frame-02.jpg",
+      "caption": "A city of layered screens and green light."
+    },
+    {
+      "src": "stills/frame-03.jpg",
+      "caption": "A close-up moment before the action."
+    },
+    {
+      "src": "stills/frame-04.jpg",
+      "caption": "Moving toward the light at the end of the sequence."
+    }
+  ]
 }

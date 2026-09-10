@@ -1,15 +1,32 @@
 {
-  "title": "Cinematic Drop",
+  "title": "VALORANT Masters Toronto",
   "year": 2025,
-  "roles": [
-    "Direction", 
-    "3D", 
-    "Edit"
-  ],
-  "description": "2025 LEC Winter Opener A cinematic exploration mixing motion and code-driven worlds.",
+  "roles": ["Generalist", "3D", "Edit"],
+  "description": "A cinematic esports promo exploring reflection, redemption and the pursuit of the Masters trophy.",
   "cover": "cover.webm",
-  "assets": [
-    "shot1.gif"
+  "assets": [],
+  "link": "",
+  "category": "Esports / Event promo",
+  "overview": [
+    "A suspended trophy, fractured reflections and characters caught in motion set the scene for VALORANT Masters Toronto. The film moves through a surreal space where moments of stillness give way to bursts of action.",
+    "Cool greens and violet light connect the character shots to the trophy, before the sequence resolves into “Reflection // Redemption” and the event identity. These selected frames capture the atmosphere and visual contrasts of the piece."
   ],
-  "link": "https://youtube.com/clip/Ugkx4OSntQ051FOA-l2WOsH9Y_XN4yt_bfql?si=nDA8hgEDceHnxnWYYouTube"
+  "stills": [
+    {
+      "src": "stills/frame-01.jpg",
+      "caption": "The Masters trophy suspended in violet light."
+    },
+    {
+      "src": "stills/frame-02.jpg",
+      "caption": "A character reflected across fractured surfaces."
+    },
+    {
+      "src": "stills/frame-03.jpg",
+      "caption": "Two figures caught in a moment of action."
+    },
+    {
+      "src": "stills/frame-04.jpg",
+      "caption": "The VALORANT Masters Toronto event identity."
+    }
+  ]
 }
