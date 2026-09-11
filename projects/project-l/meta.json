@@ -1,15 +1,37 @@
 {
-  "title": "Project L",
+  "title": "Clasio: Chapter 1 - The Story Begins",
   "year": 2025,
   "roles": [
     "Direction",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project L.",
-  "cover": "cover.webm",
-  "assets": [
-    "shot1.jpg"
+  "description": "A cinematic opening chapter for Clasio, introducing the visual world behind The Story Begins.",
+  "cover": "https://img.youtube.com/vi/zEkTELnTUBs/maxresdefault.jpg",
+  "assets": [],
+  "link": "https://www.youtube.com/watch?v=zEkTELnTUBs",
+  "category": "Music / Visual film",
+  "overview": [
+    "The Story Begins introduces a cinematic world for Clasio, using atmosphere, motion and image to set the tone for the chapter ahead.",
+    "The film builds its visual language through light, scale and pacing, creating an opening that feels both intimate and expansive."
   ],
-  "link": "#"
+  "linkLabel": "Watch the full film",
+  "stills": [
+    {
+      "src": "https://img.youtube.com/vi/zEkTELnTUBs/maxres1.jpg",
+      "caption": "Opening frame from the film."
+    },
+    {
+      "src": "https://img.youtube.com/vi/zEkTELnTUBs/maxres2.jpg",
+      "caption": "A central moment from the chapter."
+    },
+    {
+      "src": "https://img.youtube.com/vi/zEkTELnTUBs/maxres3.jpg",
+      "caption": "Closing frame from the film."
+    },
+    {
+      "src": "https://img.youtube.com/vi/zEkTELnTUBs/maxresdefault.jpg",
+      "caption": "Key visual from the release."
+    }
+  ]
 }
