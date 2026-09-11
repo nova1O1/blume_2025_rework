@@ -151,6 +151,10 @@ body.grain::before{
     }
     .detail-enter{animation:fadeIn .3s ease both}
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+    /* Detail media remains correctly sized while the utility stylesheet loads. */
+    .detail-enter .relative{position:relative;aspect-ratio:16/9}
+    .detail-enter .relative > video.absolute,
+    .detail-enter .relative > img.absolute{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
     /* ===== Redesigned Logo Marquee (mobile-large & seamless) ===== */
     .logo-marquee{
@@ -655,13 +659,13 @@ body.grain::before{
                 </div>
               </div>
 
-              ${data.stills?.length ? `
+              ${data.stills?.length || data.stillsPlaceholder ? `
                 <section class="mt-12" aria-label="Selected frames">
-                  <div class="flex items-baseline justify-between gap-4 mb-6">
+                  <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-6">
                     <h2 class="text-2xl font-semibold">Selected frames</h2>
-                    <span class="text-xs uppercase tracking-widest text-blume-sub">Stills from the film</span>
+                    <span class="text-xs uppercase tracking-widest text-blume-sub">${data.stills?.length ? 'Stills from the film' : 'More frames coming soon'}</span>
                   </div>
-                  <div class="grid md:grid-cols-2 gap-6">
+                  ${data.stills?.length ? `<div class="grid md:grid-cols-2 gap-6">
                     ${data.stills.map((still, index) => `
                       <figure class="min-w-0">
                         <a href="${escapeText(folder + still.src)}" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10 bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500" aria-label="Open frame ${index + 1}: ${escapeText(still.caption)}">
@@ -670,7 +674,9 @@ body.grain::before{
                         <figcaption class="mt-3 text-sm text-blume-sub leading-relaxed"><span class="text-blume-accent mr-2">${String(index + 1).padStart(2, '0')}</span>${escapeText(still.caption)}</figcaption>
                       </figure>
                     `).join('')}
-                  </div>
+                  </div>` : `<div class="rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-12 text-center text-blume-sub">
+                    Selected frames will be added soon.
+                  </div>`}
                 </section>
               ` : ''}
 

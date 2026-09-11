@@ -1,17 +1,28 @@
 {
-  "title": "Project E",
-  "year": 2025,
+  "title": "iFeature: Sky Babylon",
+  "year": 2022,
   "roles": [
     "Direction",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project E.",
+  "category": "Music / Official video",
+  "description": "A surreal CG world built for iFeature's Sky Babylon.",
+  "overview": [
+    "Sky Babylon moves through a monumental, otherworldly landscape where architecture fractures, floats and reforms around the performer.",
+    "The visual language combines stormy atmosphere, sculptural destruction and cinematic scale to give the official video a sense of constant transformation."
+  ],
   "cover": "cover.webm",
   "assets": [
     "shot1.png",
     "shot2.png",
     "shot3.png"
   ],
-  "link": "#"
+  "link": "https://www.youtube.com/watch?v=JbwLj1iqkik",
+  "linkLabel": "Watch the full film",
+  "stills": [
+    { "src": "shot1.png", "caption": "The first structure breaks apart into the storm." },
+    { "src": "shot2.png", "caption": "Fragments suspended in the Sky Babylon world." },
+    { "src": "shot3.png", "caption": "A monumental environment caught in transition." }
+  ]
 }

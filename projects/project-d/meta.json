@@ -1,15 +1,20 @@
 {
-  "title": "Project D",
-  "year": 2025,
+  "title": "SoLonely x sadeyes: Take My Scars",
+  "year": 2022,
   "roles": [
     "Direction",
     "3D",
     "Edit"
   ],
-  "description": "SoLonely x sadeyes - Take my scars (visualizer) | Universal Music Group",
-  "cover": "cover.webm",
-  "assets": [
-    
+  "category": "Music / Visualizer",
+  "description": "A cinematic visualizer for SoLonely and sadeyes, created for Take My Scars.",
+  "overview": [
+    "Take My Scars turns the song's emotional tension into a restrained visual world built around motion, light and repetition.",
+    "Dark frames, isolated color and a slowly evolving visual language keep the focus on the track while giving the lyric video a distinct atmosphere."
   ],
-  "link": "https://youtu.be/gVOXguazlbw?si=UG48-GrwzqKRTpJC"
+  "cover": "cover.webm",
+  "assets": [],
+  "link": "https://www.youtube.com/watch?v=gVOXguazlbw",
+  "linkLabel": "Watch the visualizer",
+  "stillsPlaceholder": true
 }

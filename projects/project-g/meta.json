@@ -1,15 +1,19 @@
 {
-  "title": "Project G",
+  "title": "Honda x Team Liquid: Prelude",
   "year": 2025,
   "roles": [
-    "Direction",
+    "Generalist",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project G.",
-  "cover": "cover.webm",
-  "assets": [
-    "shot1.jpg"
+  "category": "Automotive / Esports promo",
+  "description": "A collaboration promo bringing Honda's Prelude concept into Team Liquid's competitive world.",
+  "overview": [
+    "Honda and Team Liquid come together in a cinematic promo built around the Honda Prelude. The film connects performance, precision and ambition across automotive and esports culture.",
+    "Controlled lighting, close vehicle details and the Team Liquid identity create a focused world that moves from the garage to the open road."
   ],
-  "link": "#"
+  "cover": "cover.webm",
+  "assets": [],
+  "link": "#",
+  "stillsPlaceholder": true
 }

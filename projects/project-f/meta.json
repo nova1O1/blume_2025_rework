@@ -6,10 +6,19 @@
     "3D",
     "Edit"
   ],
-  "description": "We designed an impactful and evolving lyric video that still gets eyes on today!",
+  "category": "Music / Lyric video",
+  "description": "A lyric video for Clasio and Rosenfeld's What Am I Doing Wrong, released through MrSuicideSheep.",
+  "overview": [
+    "What Am I Doing Wrong pairs the track's lyrics with a sparse, evolving visual system centred on a single rose.",
+    "The restrained palette and repeated floral motif leave space for the words, creating a quiet, memorable visual companion to the song."
+  ],
   "cover": "cover.gif",
   "assets": [
     "shot1.jpg"
   ],
-  "link": "https://youtu.be/c6JmD33kct0?si=qu5NPNXUKdGrzoYc"
+  "link": "https://www.youtube.com/watch?v=c6JmD33kct0",
+  "linkLabel": "Watch the lyric video",
+  "stills": [
+    { "src": "shot1.jpg", "caption": "The rose motif carrying the lyric sequence." }
+  ]
 }
