@@ -128,6 +128,9 @@ body.grain::before{
     .tile:hover img, .tile:focus-visible img{transform:scale(1.08); filter:brightness(1.1);}
     .tile:hover video, .tile:focus-visible video{transform:scale(1.05);}
     .tile:hover{transform:translateY(-6px) scale(1.025); box-shadow:0 30px 60px -35px rgba(0,0,0,0.9), 0 18px 35px -24px rgba(255,106,0,0.25); border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.08);}
+    /* Raise both the tile and its transformed track above neighboring cards. */
+    .tile:hover, .tile:focus-visible{z-index:10;}
+    .puzzle-track:has(.tile:hover), .puzzle-track:has(.tile:focus-visible){z-index:3;}
     .tile:hover::before, .tile:focus-visible::before{opacity:1;}
     .tile:focus-visible{transform:translateY(-4px) scale(1.015); box-shadow:0 28px 55px -38px rgba(0,0,0,0.88), 0 16px 30px -24px rgba(255,106,0,0.3); border-color:rgba(255,255,255,0.35); outline:2px solid rgba(255,106,0,0.55); outline-offset:4px;}
     .puzzle.is-dragging .tile{transition:transform .15s linear, box-shadow .2s ease;}
@@ -1147,38 +1150,20 @@ body.grain::before{
     }
 
     const recipe=[[3,2],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
-    const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
-    const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
-    function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
-
-    /* FIXED: was "c< c ol+w" typo */
-    function occupy(col, w, h, bottom = false) {
-      for (let c = col; c < col + w; c++) {
-        if (h === 2) {
-          cols[c].top = true;
-          cols[c].bottom = true;
-        } else {
-          if (bottom) cols[c].bottom = true;
-          else cols[c].top = true;
-        }
-      }
+    const seq=[];
+    const target=Math.max(sources.length,12);
+    let col=0, ri=0;
+    function addTile(w,h,b=false){
+      const i=seq.length;
+      seq.push({src:sources[i%sources.length],span:[w,h],col,b,link:projects[i%projects.length]});
     }
-
-    function nextHole(){ for(let i=0;i<cols.length;i++){ if(cols[i].top&&!cols[i].bottom) return i; } return -1; }
-    function push(w,h,b=false){ const src=sources[si%sources.length]; const link=projects[si%projects.length]; si++; seq.push({src,span:[w,h],col,b,link}); }
-
+    // Complete each column block before starting the next, including the loop seam.
     while(seq.length<target){
-      let hole=nextHole();
-      if(hole!==-1){ col=hole; if(canPlace(col,1,1)){ occupy(col,1,1,true); push(1,1,true); continue; } }
       const [w,h]=recipe[ri++%recipe.length];
-      while(!canPlace(col,w,h)){
-        hole=nextHole();
-        if(hole!==-1){ col=hole; occupy(col,1,1,true); push(1,1,true); }
-        else { ensureCol(col); if(cols[col].top&&!cols[col].bottom){ occupy(col,1,1,true); push(1,1,true); } else col+=1; }
-      }
-      occupy(col,w,h,false); push(w,h,false); col+=w;
+      addTile(w,h);
+      if(h===1) addTile(w,1,true);
+      col+=w;
     }
-
     track.innerHTML='';
     const set1=seq.map((t,i)=>buildTile(t.src,i,t.span[0],t.span[1],t.link));
     const set2=seq.map((t,i)=>buildTile(t.src,i+set1.length,t.span[0],t.span[1],t.link));
