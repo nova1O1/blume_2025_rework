@@ -1,15 +1,20 @@
 {
-  "title": "Project I",
+  "title": "Clasio: Something In My Heart Says (Lyric Video)",
   "year": 2025,
   "roles": [
     "Direction",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project I.",
+  "description": "A cinematic lyric video for Clasio's Something In My Heart Says.",
   "cover": "cover.webm",
-  "assets": [
-    "shot1.jpg"
+  "assets": [],
+  "link": "https://www.youtube.com/watch?v=ypWWvfOPUNg",
+  "category": "Music / Lyric video",
+  "overview": [
+    "Something In My Heart Says gives Clasio's track a cinematic visual setting where atmosphere and motion carry the emotional tone of the song.",
+    "The lyric-led edit balances image, typography and rhythm to create a focused visual identity for the release."
   ],
-  "link": "#"
+  "linkLabel": "Watch the full film",
+  "stillsPlaceholder": true
 }
