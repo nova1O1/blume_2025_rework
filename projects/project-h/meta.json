@@ -1,15 +1,20 @@
 {
-  "title": "Project H",
-  "year": 2025,
+  "title": "Rosenfeld: Like U (Lyric Video)",
+  "year": 2020,
   "roles": [
     "Direction",
     "3D",
     "Edit"
   ],
-  "description": "Placeholder description for Project H.",
+  "description": "A cinematic lyric video for Rosenfeld's Like U.",
   "cover": "cover.webm",
-  "assets": [
-    "shot1.jpg"
+  "assets": [],
+  "link": "https://www.youtube.com/watch?v=ws-W0JGcBss",
+  "category": "Music / Lyric video",
+  "overview": [
+    "Like U translates Rosenfeld's track into a cinematic lyric-led visual world. The film combines atmospheric motion, type and image to give the song a distinct visual identity.",
+    "The visual language moves with the music, holding on mood and detail while making space for the lyrics to lead the experience."
   ],
-  "link": "#"
+  "linkLabel": "Watch the full film",
+  "stillsPlaceholder": true
 }
