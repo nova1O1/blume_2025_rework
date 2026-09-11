@@ -115,7 +115,7 @@ body.grain::before{
   grid-auto-columns: var(--colW);
   user-select:none;
 }
-    @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:1rem; } }
+    @media(min-width:768px){ .puzzle-track{ --rowH:16rem; --colW:20rem; --gap:.5rem; } }
     @media(min-width:1280px){ .puzzle-track{ --rowH:18rem; --colW:22rem; } }
     .puzzle-track.one{ grid-template-rows: var(--rowH, 14rem); }
 
@@ -214,6 +214,29 @@ body.grain::before{
       from{ transform: translateX(0); }
       to  { transform: translateX(calc(-1 * var(--loop, 0px))); }
     }
+
+    section[id]{scroll-margin-top:80px}
+    .inquiry-button,.mobile-inquiry{display:inline-flex;align-items:center;justify-content:center;background:#ff6a00;color:#111;padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;min-height:44px}
+    .mobile-inquiry{margin-left:auto;margin-right:12px}
+    @media(min-width:768px){.mobile-inquiry{display:none}}
+    header nav a[href="#contact"]{background:#ff6a00;color:#111}
+    .contact-field{display:flex;flex-direction:column;gap:8px;font-size:14px;color:#ddd}
+    .contact-field input,.contact-field textarea{font-size:16px}
+    .project-inquiry{max-width:1100px;margin:0 auto;padding:48px 24px 80px;border-top:1px solid #ffffff20;text-align:center}
+    .project-inquiry h2{font-size:clamp(28px,4vw,44px);font-weight:700}
+    .project-inquiry p{color:#b3b3b3;margin:16px 0 24px}
+    #clients{padding-block:28px}
+    #clients h2{font-size:18px}
+    #clients .logo-marquee{--row-h:64px;gap:8px;padding:8px 0}
+    #clients .logo-link{min-width:130px;padding-inline:28px}
+    #clients .mt-8{margin-top:16px}
+    .puzzle{padding-block:24px}
+    .tile-caption{position:absolute;inset:auto 0 0;padding:38px 16px 16px;background:linear-gradient(transparent,#000e);color:white;z-index:3;opacity:0;transition:opacity .2s;pointer-events:none}
+    .tile-caption strong{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.tile-caption strong,.tile-caption span{font-size:14px;line-height:1.4}.tile-caption span{display:block}
+    .tile-caption span{color:#ccc;margin-top:4px}
+    .tile:hover .tile-caption,.tile:focus-visible .tile-caption{opacity:1}
+    @media(hover:none){.tile-caption{opacity:1}}
+    @media(max-width:767px){.puzzle-track{--colW:34vw;--rowH:26vw}.tile-caption{padding:28px 10px 10px}.tile-caption span{display:none}}
   </style>
 </head>
 <body class="grain bg-blume-bg text-blume-text font-sans selection:bg-blume-accent/30 selection:text-black">
@@ -231,6 +254,7 @@ body.grain::before{
           <a href="#services" class="hover:text-white">Services</a>
           <a href="#contact" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/20  text-white border border-white/10 shadow-glow">Start a Project</a>
         </nav>
+        <a href="#contact" class="mobile-inquiry">Start a Project</a>
         <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10 text-blume-sub hover:text-white" aria-label="Open Menu">☰</button>
       </div>
     </div>
@@ -254,11 +278,11 @@ body.grain::before{
       <video data-video-src="./assets/previews/hero.mp4" poster="./assets/previews/hero.jpg" muted loop playsinline preload="none" class="w-full h-full object-cover"></video>
 
       <div class="absolute left-6 bottom-6 md:left-10 md:bottom-10 max-w-2xl p-6 md:p-7 rounded-2xl backdrop-blur supports-[backdrop-filter]:bg-blume-bg/70 border border-white/10 text-left">
-        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">Crafting <span class="text-blume-accent">cinematic worlds</span> where art meets code.</h1>
-        <p class="mt-4 text-blume-sub text-base md:text-lg">Blume is a studio blending 3D motion, design, and technology. From music & culture to branding and digital, we build immersive identities.</p>
+        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight"><span class="text-blume-accent">Cinematic 3D films</span> for music, esports, and brands.</h1>
+        <p class="mt-4 text-blume-sub text-base md:text-lg">From first concept to final edit, we create promos, lyric videos, and CG worlds that give your release a distinct visual identity.</p>
         <div class="mt-6 flex flex-wrap justify-start gap-3">
-          <a href="#work" class="px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">See Our Work</a>
-          <a href="#contact" class="px-4 py-2 rounded-xl bg-white/5 text-white border border-white/10 hover:bg-white/10">Start a Project</a>
+          <a href="#contact" class="px-4 py-2 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">Start a Project</a>
+          <a href="#work" class="px-4 py-2 rounded-xl bg-white/5 text-white border border-white/10 hover:bg-white/10">See Our Work</a>
         </div>
       </div>
     </div>
@@ -326,7 +350,7 @@ body.grain::before{
     </div>
   </section>
 
-  
+
 
   <!-- PROCESS -->
   <section id="process" class="py-16 md:py-24">
@@ -365,13 +389,13 @@ body.grain::before{
 
         <div class="mt-6 grid grid-cols-3 gap-4 text-sm text-blume-sub">
           <div class="rounded-xl border border-white/10 p-4 bg-white/5">
-            <div class="text-2xl font-bold text-white">3+</div><div>Core disciplines</div>
+            <div class="text-lg font-bold text-white">Esports</div><div>LEC &amp; VALORANT</div>
           </div>
           <div class="rounded-xl border border-white/10 p-4 bg-white/5">
-            <div class="text-2xl font-bold text-white">1000+</div><div>Projects shipped</div>
+            <div class="text-lg font-bold text-white">Music</div><div>Clasio &amp; Rosenfeld</div>
           </div>
           <div class="rounded-xl border border-white/10 p-4 bg-white/5">
-            <div class="text-2xl font-bold text-white">∞</div><div>Ideas brewing</div>
+            <div class="text-lg font-bold text-white">Brands</div><div>Honda x Team Liquid</div>
           </div>
         </div>
       </div>
@@ -404,18 +428,21 @@ body.grain::before{
   <section id="contact" class="py-16 md:py-24">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-3xl md:text-5xl font-bold">Let’s build something wild</h2>
-      <p class="mt-4 text-blume-sub">Whether it’s a music video, a brand world, or an experiment, we’re here to make visuals that move people.</p>
+      <p class="mt-4 text-blume-sub">Tell us what you’re making. A rough idea is enough. We’ll follow up by email to discuss the scope and next steps.</p>
       <div class="mt-8">
         <!-- UPDATED FORM -->
         <form id="contactForm" class="grid sm:grid-cols-2 gap-3 text-left">
-          <input name="name" type="text" placeholder="Your name"
-                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
-          <input name="email" type="email" placeholder="Email"
-                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required>
-          <input name="company" type="text" placeholder="Project/Company"
-                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2">
-          <textarea name="message" placeholder="Tell us about your idea…" rows="5"
-                    class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2" required></textarea>
+<label class="contact-field" for="contact-name"><span>Your name</span>
+          <input id="contact-name" autocomplete="name" name="name" type="text" placeholder="Your name"
+                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required></label>
+<label class="contact-field" for="contact-email"><span>Email</span>
+          <input id="contact-email" autocomplete="email" name="email" type="email" placeholder="Email"
+                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60" required></label>
+<label class="contact-field sm:col-span-2" for="contact-company"><span>Company (optional)</span>
+          <input id="contact-company" autocomplete="organization" name="company" type="text" placeholder="Project/Company"
+                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2"></label>
+<label class="contact-field sm:col-span-2" for="contact-message"><span>What are you planning?</span>          <textarea id="contact-message" name="message" placeholder="A few words about the project, timing, or a reference you love…" rows="5"
+                    class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blume-accent/60 sm:col-span-2" required></textarea></label>
 
           <!-- Honeypot -->
           <div class="hp-field" aria-hidden="true" style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
@@ -426,10 +453,10 @@ body.grain::before{
           <input type="hidden" name="form_started_at" id="form_started_at">
 
           <button id="contactSubmit" type="submit" class="sm:col-span-2 px-5 py-3 rounded-xl bg-blume-accent text-black font-semibold hover:shadow-glow">
-            Start a Project
+            Send inquiry
           </button>
 
-          <p id="contactStatus" class="sm:col-span-2 text-sm text-blume-sub mt-1"></p>
+          <p role="status" aria-live="polite" id="contactStatus" class="sm:col-span-2 text-sm text-blume-sub mt-1"></p>
         </form>
         <!-- /UPDATED FORM -->
 
@@ -447,11 +474,7 @@ body.grain::before{
         </a>
         <span>© <span id="year"></span> Blume Studio</span>
       </div>
-      <div class="flex items-center gap-5">
-        <a class="hover:text-white" href="#">Instagram</a>
-        <a class="hover:text-white" href="#">Behance</a>
-        <a class="hover:text-white" href="#">YouTube</a>
-      </div>
+
     </div>
   </footer>
 
@@ -469,7 +492,8 @@ body.grain::before{
       "./projects/project-h/",
       "./projects/project-i/",
       "./projects/project-j/",
-      "./projects/project-k/"
+      "./projects/project-k/",
+      "./projects/project-l/"
     ]
   }
 
@@ -626,7 +650,7 @@ body.grain::before{
                 <a href="/" class="flex items-center gap-3">
                   <img src="https://blume-visuals.com/assets/images/logo.png" class="h-10" alt="Blume">
                 </a>
-                <a href="/" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10">Back</a>
+                <div class="flex items-center gap-3"><a href="/#work" class="text-sm">All work</a><a href="/#contact" class="inquiry-button">Start a Project</a></div>
               </div>
             </header>
 
@@ -698,6 +722,7 @@ body.grain::before{
                 `).join("")}
               </div>
             </section>
+            <section class="project-inquiry"><h2>Have something like this in mind?</h2><p>Tell us about your next film, release, or campaign.</p><a class="inquiry-button" href="/#contact">Start a Project</a></section>
           </main>
         `;
       } catch(e){ console.error("Failed to load project", e); }
@@ -1082,7 +1107,7 @@ body.grain::before{
         const res = await fetch(`${folder}/meta.json`);
         if(!res.ok) return null;
         const data = await res.json();
-        return { folder, src: /^https?:\/\//i.test(data.cover) ? data.cover : folder + data.cover };
+        return { folder, title: data.title, category: data.category, src: /^https?:\/\//i.test(data.cover) ? data.cover : folder + data.cover };
       } catch { return null; }
     }
 
@@ -1108,10 +1133,20 @@ body.grain::before{
       a.innerHTML = isVid
         ? `<video data-video-src="${preview?.src || src}" ${preview ? `poster="${preview.poster}"` : ''} muted loop playsinline preload="none" draggable="false"></video><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`
         : `<img loading="lazy" src="${src}" alt="Artwork ${i+1}" draggable="false"><div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>`;
+      const entry = entries.find(item => item.folder === link);
+      a.setAttribute('aria-label', 'View project: ' + (entry?.title || 'Selected work'));
+      const caption = document.createElement('span');
+      caption.className = 'tile-caption';
+      const title = document.createElement('strong');
+      title.textContent = entry?.title || 'Selected work';
+      const category = document.createElement('span');
+      category.textContent = entry?.category || 'View project';
+      caption.append(title, category);
+      a.append(caption);
       return a;
     }
 
-    const recipe=[[2,1],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
+    const recipe=[[3,2],[1,1],[1,2],[2,1],[1,1],[2,2],[1,1],[2,1],[1,1],[1,2],[2,1],[1,1]];
     const seq=[]; let si=0,col=0; const target=Math.max(sources.length,12); let ri=0;
     const cols=[]; function ensureCol(i){ while(cols.length<=i) cols.push({top:false,bottom:false}); }
     function canPlace(col,w,h){ for(let c=col;c<col+w;c++){ ensureCol(c); if(h===2){ if(cols[c].top||cols[c].bottom) return false; } else { if(cols[c].top) return false; } } return true; }
