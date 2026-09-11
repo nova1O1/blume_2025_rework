@@ -617,6 +617,7 @@ body.grain::before{
         const data = await res.json();
         previews = await previewManifest;
         document.title = data.title + ' | Blume';
+        const assetPath = path => /^https?:\/\//i.test(path) ? path : folder + path;
 
         document.body.innerHTML = `
           <main class="min-h-screen detail-bg">
@@ -637,7 +638,7 @@ body.grain::before{
               </div>
               <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
                 <div class="relative aspect-[16/9]">
-                  ${renderAsset(folder + data.cover)}
+                  ${renderAsset(assetPath(data.cover))}
                 </div>
               </div>
 
@@ -674,8 +675,8 @@ body.grain::before{
                   ${data.stills?.length ? `<div class="grid md:grid-cols-2 gap-6">
                     ${data.stills.map((still, index) => `
                       <figure class="min-w-0">
-                        <a href="${escapeText(folder + still.src)}" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10 bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500" aria-label="Open frame ${index + 1}: ${escapeText(still.caption)}">
-                          <img src="${escapeText(folder + still.src)}" alt="${escapeText(still.caption)}" loading="lazy" decoding="async" width="1440" height="810" class="w-full h-auto aspect-video object-contain" />
+                        <a href="${escapeText(assetPath(still.src))}" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10 bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-500" aria-label="Open frame ${index + 1}: ${escapeText(still.caption)}">
+                          <img src="${escapeText(assetPath(still.src))}" alt="${escapeText(still.caption)}" loading="lazy" decoding="async" width="1440" height="810" class="w-full h-auto aspect-video object-contain" />
                         </a>
                         <figcaption class="mt-3 text-sm text-blume-sub leading-relaxed"><span class="text-blume-accent mr-2">${String(index + 1).padStart(2, '0')}</span>${escapeText(still.caption)}</figcaption>
                       </figure>
@@ -691,7 +692,7 @@ body.grain::before{
                 ${(data.assets || []).map(a => `
                   <div class="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
                     <div class="relative aspect-[16/9]">
-                      ${renderAsset(folder + a)}
+                      ${renderAsset(assetPath(a))}
                     </div>
                   </div>
                 `).join("")}
@@ -1081,7 +1082,7 @@ body.grain::before{
         const res = await fetch(`${folder}/meta.json`);
         if(!res.ok) return null;
         const data = await res.json();
-        return { folder, src: folder + data.cover };
+        return { folder, src: /^https?:\/\//i.test(data.cover) ? data.cover : folder + data.cover };
       } catch { return null; }
     }
 

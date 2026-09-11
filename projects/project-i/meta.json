@@ -7,7 +7,7 @@
     "Edit"
   ],
   "description": "A cinematic lyric video for Clasio's Something In My Heart Says.",
-  "cover": "cover.webm",
+  "cover": "https://img.youtube.com/vi/ypWWvfOPUNg/maxresdefault.jpg",
   "assets": [],
   "link": "https://www.youtube.com/watch?v=ypWWvfOPUNg",
   "category": "Music / Lyric video",
@@ -16,5 +16,22 @@
     "The lyric-led edit balances image, typography and rhythm to create a focused visual identity for the release."
   ],
   "linkLabel": "Watch the full film",
-  "stillsPlaceholder": true
+  "stills": [
+    {
+      "src": "https://img.youtube.com/vi/ypWWvfOPUNg/maxres1.jpg",
+      "caption": "Opening frame from the lyric video."
+    },
+    {
+      "src": "https://img.youtube.com/vi/ypWWvfOPUNg/maxres2.jpg",
+      "caption": "A central moment from the film."
+    },
+    {
+      "src": "https://img.youtube.com/vi/ypWWvfOPUNg/maxres3.jpg",
+      "caption": "The closing frame."
+    },
+    {
+      "src": "https://img.youtube.com/vi/ypWWvfOPUNg/maxresdefault.jpg",
+      "caption": "Key visual from the release."
+    }
+  ]
 }
